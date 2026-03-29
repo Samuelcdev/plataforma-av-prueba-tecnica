@@ -12,12 +12,11 @@ use App\Domain\Exceptions\EntityNotFoundException;
 use App\Domain\Exceptions\InvalidCredentialsException;
 use App\Domain\Exceptions\UnauthorizedDomainException;
 use App\Domain\Repositories\UserRepositoryInterface;
-use App\Domain\Services\AuthServiceInterface;
 use App\Infrastructure\Auth\SanctumAuthProviderInterface;
 use DateTimeImmutable;
 use Illuminate\Support\Facades\Hash;
 
-final class AuthService implements AuthServiceInterface
+final class AuthService
 {
     public function __construct(
         private UserRepositoryInterface $users,

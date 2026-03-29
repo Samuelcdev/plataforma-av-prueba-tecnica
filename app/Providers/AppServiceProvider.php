@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Application\Services\AuthService;
 use App\Domain\Repositories\AdminRepositoryInterface;
 use App\Domain\Repositories\HotelRepositoryInterface;
 use App\Domain\Repositories\ItemRepositoryInterface;
@@ -12,7 +11,6 @@ use App\Domain\Repositories\OrderItemRepositoryInterface;
 use App\Domain\Repositories\OrderRepositoryInterface;
 use App\Domain\Repositories\RoleRepositoryInterface;
 use App\Domain\Repositories\UserRepositoryInterface;
-use App\Domain\Services\AuthServiceInterface;
 use App\Infrastructure\Auth\SanctumAuthProvider;
 use App\Infrastructure\Auth\SanctumAuthProviderInterface;
 use App\Infrastructure\Repositories\EloquentAdminRepository;
@@ -46,7 +44,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(OrderRepositoryInterface::class, EloquentOrderRepository::class);
         $this->app->bind(OrderItemRepositoryInterface::class, EloquentOrderItemRepository::class);
         $this->app->bind(OrderAssignmentRepositoryInterface::class, EloquentOrderAssignmentRepository::class);
-        $this->app->bind(AuthServiceInterface::class, AuthService::class);
         $this->app->bind(SanctumAuthProviderInterface::class, SanctumAuthProvider::class);
     }
 

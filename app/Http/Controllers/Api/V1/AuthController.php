@@ -6,11 +6,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Application\DTO\Auth\CurrentUserDto;
 use App\Application\DTO\Auth\LoginDto;
+use App\Application\Services\AuthService;
 use App\Domain\Exceptions\EntityNotFoundException;
 use App\Domain\Exceptions\InvalidCredentialsException;
 use App\Domain\Exceptions\UnauthorizedDomainException;
 use App\Domain\Exceptions\ValidationException as DomainValidationException;
-use App\Domain\Services\AuthServiceInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
 use App\Http\Resources\Api\V1\Auth\AuthResource;
@@ -21,7 +21,7 @@ use Throwable;
 
 final class AuthController extends Controller
 {
-    public function __construct(private AuthServiceInterface $authService)
+    public function __construct(private AuthService $authService)
     {
     }
 
