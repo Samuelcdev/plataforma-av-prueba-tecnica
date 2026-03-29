@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('phone', 20)->nullable();
             $table->string('address', 255)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -12,7 +12,7 @@ class OrdersSeeder extends Seeder
         DB::table('orders')->insert([
             [
                 'id' => '80000000-0000-0000-0000-000000000001',
-                'hotel_id' => '60000000-0000-0000-0000-000000000001',
+                'hotel_id' => '019d3820-3fcd-721e-97b9-152da9a7d53c',
                 'name' => 'Orden Semanal Andes 01',
                 'service_type' => 'Limpieza',
                 'start_date' => '2026-04-01 08:00:00',
@@ -22,7 +22,7 @@ class OrdersSeeder extends Seeder
             ],
             [
                 'id' => '80000000-0000-0000-0000-000000000002',
-                'hotel_id' => '60000000-0000-0000-0000-000000000001',
+                'hotel_id' => '019d3820-3fcd-721e-97b9-152da9a7d53c',
                 'name' => 'Orden Semanal Andes 02',
                 'service_type' => 'Mantenimiento',
                 'start_date' => '2026-04-03 09:00:00',
@@ -32,7 +32,7 @@ class OrdersSeeder extends Seeder
             ],
             [
                 'id' => '80000000-0000-0000-0000-000000000003',
-                'hotel_id' => '60000000-0000-0000-0000-000000000002',
+                'hotel_id' => '019d3820-3fcd-721e-97b9-1bb0fbf54534',
                 'name' => 'Orden Pacifico 01',
                 'service_type' => 'Lavanderia',
                 'start_date' => '2026-04-02 07:30:00',
@@ -42,7 +42,7 @@ class OrdersSeeder extends Seeder
             ],
             [
                 'id' => '80000000-0000-0000-0000-000000000004',
-                'hotel_id' => '60000000-0000-0000-0000-000000000002',
+                'hotel_id' => '019d3820-3fcd-721e-97b9-1bb0fbf54534',
                 'name' => 'Orden Pacifico 02',
                 'service_type' => 'Desinfeccion',
                 'start_date' => '2026-04-05 10:00:00',
@@ -52,7 +52,7 @@ class OrdersSeeder extends Seeder
             ],
             [
                 'id' => '80000000-0000-0000-0000-000000000005',
-                'hotel_id' => '60000000-0000-0000-0000-000000000003',
+                'hotel_id' => '019d3820-3fcd-721e-97b9-1e1995e6afbd',
                 'name' => 'Orden Oriente 01',
                 'service_type' => 'Aseo General',
                 'start_date' => '2026-04-04 06:00:00',
@@ -62,7 +62,7 @@ class OrdersSeeder extends Seeder
             ],
             [
                 'id' => '80000000-0000-0000-0000-000000000006',
-                'hotel_id' => '60000000-0000-0000-0000-000000000003',
+                'hotel_id' => '019d3820-3fcd-721e-97b9-1e1995e6afbd',
                 'name' => 'Orden Oriente 02',
                 'service_type' => 'Limpieza',
                 'start_date' => '2026-04-06 08:15:00',

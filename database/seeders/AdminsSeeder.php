@@ -11,8 +11,8 @@ class AdminsSeeder extends Seeder
     {
         DB::table('admins')->insert([
             [
-                'id' => '40000000-0000-0000-0000-000000000001',
-                'user_id' => '10000000-0000-0000-0000-000000000001',
+                'id' => '019d3820-0f3d-731f-8ad0-767b93840a22',
+                'user_id' => '019d379e-0915-74a8-b55a-eea8dd6536f0',
                 'document_type' => 'CC',
                 'document' => '1001001001',
                 'name' => 'Ana Admin',
@@ -20,8 +20,8 @@ class AdminsSeeder extends Seeder
                 'phone' => '+573001001001',
             ],
             [
-                'id' => '40000000-0000-0000-0000-000000000002',
-                'user_id' => '10000000-0000-0000-0000-000000000002',
+                'id' => '019d3820-0f3c-70ae-b8d7-ac282e09cc3b',
+                'user_id' => '019d379e-0915-74a8-b55a-e8b0f0e1cbeb',
                 'document_type' => 'CE',
                 'document' => '2002002002',
                 'name' => 'Carlos Operaciones',
