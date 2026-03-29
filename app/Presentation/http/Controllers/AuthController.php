@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Presentation\http\Controllers;
 
 use App\Application\DTO\Auth\CurrentUserDto;
 use App\Application\DTO\Auth\LoginDto;
@@ -21,9 +21,7 @@ use Throwable;
 
 final class AuthController extends Controller
 {
-    public function __construct(private AuthService $authService)
-    {
-    }
+    public function __construct(private AuthService $authService) {}
 
     public function login(LoginRequest $request): JsonResponse
     {
