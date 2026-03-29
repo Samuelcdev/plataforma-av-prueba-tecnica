@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Presentation\Http\Controllers\AuthController;
 use App\Presentation\Http\Controllers\HotelController;
+use App\Presentation\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/v1')->group(function (): void {
@@ -24,5 +25,15 @@ Route::prefix('/v1')->group(function (): void {
         Route::put('{id}', [HotelController::class, 'update'])->name('api.v1.hotels.update');
         Route::patch('{id}', [HotelController::class, 'update'])->name('api.v1.hotels.patch');
         Route::delete('{id}', [HotelController::class, 'destroy'])->name('api.v1.hotels.destroy');
+    });
+
+    Route::middleware('auth')->prefix('orders')->group(function (): void {
+        Route::get('/', [OrderController::class, 'index'])->name('api.v1.orders.index');
+        Route::get('{id}', [OrderController::class, 'show'])->name('api.v1.orders.show');
+        Route::post('/', [OrderController::class, 'store'])->name('api.v1.orders.store');
+        Route::put('{id}', [OrderController::class, 'update'])->name('api.v1.orders.update');
+        Route::patch('{id}', [OrderController::class, 'update'])->name('api.v1.orders.patch');
+        Route::post('{id}/assign-operatives', [OrderController::class, 'assignOperatives'])->name('api.v1.orders.assign-operatives');
+        Route::post('{id}/cancel', [OrderController::class, 'cancel'])->name('api.v1.orders.cancel');
     });
 });

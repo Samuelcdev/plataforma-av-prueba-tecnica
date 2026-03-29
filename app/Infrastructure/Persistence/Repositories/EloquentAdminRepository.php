@@ -29,6 +29,13 @@ final class EloquentAdminRepository implements AdminRepositoryInterface
         return $admin ? $this->mapper->toEntity($admin) : null;
     }
 
+    public function findByUserId(string $userId): ?AdminEntity
+    {
+        $admin = Admin::query()->where('user_id', $userId)->first();
+
+        return $admin ? $this->mapper->toEntity($admin) : null;
+    }
+
     public function save(AdminEntity $adminEntity): AdminEntity
     {
         $admin = Admin::query()->find($adminEntity->getId()) ?? new Admin();

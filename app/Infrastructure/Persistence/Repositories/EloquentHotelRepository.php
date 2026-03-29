@@ -30,6 +30,13 @@ final class EloquentHotelRepository implements HotelRepositoryInterface
         return $hotel ? $this->mapper->toEntity($hotel) : null;
     }
 
+    public function findByUserId(string $userId): ?HotelEntity
+    {
+        $hotel = Hotel::query()->where('user_id', $userId)->first();
+
+        return $hotel ? $this->mapper->toEntity($hotel) : null;
+    }
+
     public function findByNit(string $nit): ?HotelEntity
     {
         $hotel = Hotel::query()->withTrashed()->where('nit', $nit)->first();

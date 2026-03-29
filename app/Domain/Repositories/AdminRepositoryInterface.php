@@ -13,4 +13,5 @@ interface AdminRepositoryInterface
      */
     public function all(): array;
     public function findById(string $id): ?AdminEntity;
+    public function findByUserId(string $userId): ?AdminEntity;
 }

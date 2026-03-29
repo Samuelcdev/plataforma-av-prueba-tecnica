@@ -22,6 +22,8 @@ final class OrderEntity
 
     private ?DateTimeImmutable $updatedAt;
 
+    private string $status;
+
     public function __construct(
         string $id,
         string $hotelId,
@@ -31,6 +33,7 @@ final class OrderEntity
         DateTimeImmutable $endDate,
         ?DateTimeImmutable $createdAt = null,
         ?DateTimeImmutable $updatedAt = null,
+        string $status = 'active',
     ) {
         $this->id = $id;
         $this->hotelId = $hotelId;
@@ -40,6 +43,7 @@ final class OrderEntity
         $this->endDate = $endDate;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->status = $status;
     }
 
     public function getId(): string
@@ -134,6 +138,18 @@ final class OrderEntity
     public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

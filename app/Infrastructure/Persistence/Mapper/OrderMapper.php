@@ -26,6 +26,7 @@ final class OrderMapper
             $endDate ?? new DateTimeImmutable((string) $order->end_date),
             $this->toImmutable($order->created_at),
             $this->toImmutable($order->updated_at),
+            (string) ($order->status ?? 'active'),
         );
     }
 

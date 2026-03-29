@@ -15,10 +15,12 @@ return new class extends Migration
             $table->string('service_type', 100);
             $table->dateTime('start_date');
             $table->dateTime('end_date');
+            $table->string('status', 20)->default('active');
             $table->timestamps();
 
             $table->index(['start_date', 'end_date']);
             $table->index('hotel_id');
+            $table->index('status');
         });
     }
 

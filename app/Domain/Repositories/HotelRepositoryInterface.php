@@ -15,6 +15,8 @@ interface HotelRepositoryInterface
 
     public function findById(string $id): ?HotelEntity;
 
+    public function findByUserId(string $userId): ?HotelEntity;
+
     public function findByNit(string $nit): ?HotelEntity;
 
     public function save(HotelEntity $hotel): HotelEntity;

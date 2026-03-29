@@ -24,6 +24,7 @@ class Order extends Model
         'service_type',
         'start_date',
         'end_date',
+        'status',
     ];
 
     protected function casts(): array
@@ -31,6 +32,7 @@ class Order extends Model
         return [
             'start_date' => 'datetime',
             'end_date' => 'datetime',
+            'status' => 'string',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

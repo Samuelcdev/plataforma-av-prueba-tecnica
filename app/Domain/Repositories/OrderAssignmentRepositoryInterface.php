@@ -12,7 +12,12 @@ interface OrderAssignmentRepositoryInterface
      * @return list<OrderAssignmentEntity>
      */
     public function all(): array;
+    /**
+     * @return list<OrderAssignmentEntity>
+     */
+    public function findByOrderId(string $orderId): array;
     public function findById(string $id): ?OrderAssignmentEntity;
+    public function findByOrderAndOperativeId(string $orderId, string $operativeId): ?OrderAssignmentEntity;
     public function save(OrderAssignmentEntity $orderAssignment): OrderAssignmentEntity;
     public function deleteById(string $id): bool;
 }

@@ -23,9 +23,26 @@ final class EloquentOrderAssignmentRepository implements OrderAssignmentReposito
         );
     }
 
+    public function findByOrderId(string $orderId): array
+    {
+        return $this->mapper->toCollectionEntity(
+            OrderAssignment::query()->where('order_id', $orderId)->orderBy('assigned_at')->get()
+        );
+    }
+
     public function findById(string $id): ?OrderAssignmentEntity
     {
         $orderAssignment = OrderAssignment::query()->find($id);
+
+        return $orderAssignment ? $this->mapper->toEntity($orderAssignment) : null;
+    }
+
+    public function findByOrderAndOperativeId(string $orderId, string $operativeId): ?OrderAssignmentEntity
+    {
+        $orderAssignment = OrderAssignment::query()
+            ->where('order_id', $orderId)
+            ->where('operative_id', $operativeId)
+            ->first();
 
         return $orderAssignment ? $this->mapper->toEntity($orderAssignment) : null;
     }

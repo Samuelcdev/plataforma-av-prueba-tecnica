@@ -23,6 +23,13 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
         );
     }
 
+    public function findByHotelId(string $hotelId): array
+    {
+        return $this->mapper->toCollectionEntity(
+            Order::query()->where('hotel_id', $hotelId)->orderBy('start_date')->get()
+        );
+    }
+
     public function findById(string $id): ?OrderEntity
     {
         $order = Order::query()->find($id);
@@ -40,6 +47,7 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
         $order->service_type = $orderEntity->getServiceType();
         $order->start_date = $this->toDatabaseDateTime($orderEntity->getStartDate());
         $order->end_date = $this->toDatabaseDateTime($orderEntity->getEndDate());
+        $order->status = $orderEntity->getStatus();
 
         if ($orderEntity->getCreatedAt() !== null) {
             $order->created_at = $this->toDatabaseDateTime($orderEntity->getCreatedAt());

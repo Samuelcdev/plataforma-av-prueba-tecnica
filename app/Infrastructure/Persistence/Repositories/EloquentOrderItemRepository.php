@@ -22,6 +22,13 @@ final class EloquentOrderItemRepository implements OrderItemRepositoryInterface
         );
     }
 
+    public function findByOrderId(string $orderId): array
+    {
+        return $this->mapper->toCollectionEntity(
+            OrderItem::query()->where('order_id', $orderId)->orderBy('id')->get()
+        );
+    }
+
     public function findById(string $id): ?OrderItemEntity
     {
         $orderItem = OrderItem::query()->find($id);
@@ -48,5 +55,10 @@ final class EloquentOrderItemRepository implements OrderItemRepositoryInterface
         $orderItem = OrderItem::query()->find($id);
 
         return $orderItem ? (bool) $orderItem->delete() : false;
+    }
+
+    public function deleteByOrderId(string $orderId): bool
+    {
+        return (bool) OrderItem::query()->where('order_id', $orderId)->delete();
     }
 }
