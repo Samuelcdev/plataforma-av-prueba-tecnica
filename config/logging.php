@@ -65,6 +65,41 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'debug' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/debug.log'),
+            'level' => 'debug',
+            'replace_placeholders' => true,
+        ],
+
+        'info' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/info.log'),
+            'level' => 'info',
+            'replace_placeholders' => true,
+        ],
+
+        'warning' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/warning.log'),
+            'level' => 'warning',
+            'replace_placeholders' => true,
+        ],
+
+        'error' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/error.log'),
+            'level' => 'error',
+            'replace_placeholders' => true,
+        ],
+
+        'critical' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/critical.log'),
+            'level' => 'critical',
+            'replace_placeholders' => true,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

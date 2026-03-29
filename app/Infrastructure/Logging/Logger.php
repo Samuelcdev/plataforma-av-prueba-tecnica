@@ -6,28 +6,33 @@ use Illuminate\Support\Facades\Log;
 
 class Logger implements LoggerInterface
 {
+    private function mergeContext(array $context): array
+    {
+        return array_merge($context, MDCContext::getInstance()->all());
+    }
+
     public function debug(string $message, array $context = []): void
     {
-        Log::debug($message, [...$context, 'mdc' => MDCContext::getInstance()->all()]);
+        Log::channel('debug')->debug($message, $this->mergeContext($context));
     }
 
     public function info(string $message, array $context = []): void
     {
-        Log::info($message, [...$context, 'mdc' => MDCContext::getInstance()->all()]);
+        Log::channel('info')->info($message, $this->mergeContext($context));
     }
 
     public function warning(string $message, array $context = []): void
     {
-        Log::warning($message, [...$context, 'mdc' => MDCContext::getInstance()->all()]);
+        Log::channel('warning')->warning($message, $this->mergeContext($context));
     }
 
     public function error(string $message, array $context = []): void
     {
-        Log::error($message, [...$context, 'mdc' => MDCContext::getInstance()->all()]);
+        Log::channel('error')->error($message, $this->mergeContext($context));
     }
 
     public function critical(string $message, array $context = []): void
     {
-        Log::critical($message, [...$context, 'mdc' => MDCContext::getInstance()->all()]);
+        Log::channel('critical')->critical($message, $this->mergeContext($context));
     }
 }
