@@ -1,0 +1,21 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Repositories;
+
+use App\Domain\Entities\HotelEntity;
+
+interface HotelRepositoryInterface
+{
+    /**
+     * @return list<HotelEntity>
+     */
+    public function all(): array;
+
+    public function findById(string $id): ?HotelEntity;
+
+    public function save(HotelEntity $hotel): HotelEntity;
+
+    public function deleteById(string $id): bool;
+}
