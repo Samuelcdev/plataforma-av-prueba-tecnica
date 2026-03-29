@@ -24,6 +24,8 @@ final class HotelEntity
 
     private ?DateTimeImmutable $updatedAt;
 
+    private ?DateTimeImmutable $deletedAt;
+
     public function __construct(
         string $id,
         string $userId,
@@ -34,6 +36,7 @@ final class HotelEntity
         ?string $address = null,
         ?DateTimeImmutable $createdAt = null,
         ?DateTimeImmutable $updatedAt = null,
+        ?DateTimeImmutable $deletedAt = null,
     ) {
         $this->id = $id;
         $this->userId = $userId;
@@ -44,6 +47,7 @@ final class HotelEntity
         $this->address = $address;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->deletedAt = $deletedAt;
     }
 
     public function getId(): string
@@ -150,6 +154,18 @@ final class HotelEntity
     public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

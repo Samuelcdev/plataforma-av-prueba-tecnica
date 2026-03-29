@@ -24,6 +24,7 @@ final class HotelMapper
             $hotel->address !== null ? (string) $hotel->address : null,
             $this->toImmutable($hotel->created_at),
             $this->toImmutable($hotel->updated_at),
+            $this->toImmutable($hotel->deleted_at),
         );
     }
 
