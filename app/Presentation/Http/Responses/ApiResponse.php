@@ -15,38 +15,24 @@ final class ApiResponse
         int $status = 200,
         ?int $total = null,
     ): JsonResponse {
-        return response()->json([
+        $response = [
             'success' => true,
             'message' => $message,
-            'total' => $total ?? self::resolveTotal($data),
-            'data' => $data,
-        ], $status);
+        ];
+
+        if (isset($total)) $response['total'] = $total;
+        if (isset($data)) $response['data'] = $data;
+
+        return response()->json($response, $status);
     }
 
     public static function error(
         string $message,
         int $status,
-        mixed $data = null,
-        int $total = 0,
     ): JsonResponse {
         return response()->json([
             'success' => false,
             'message' => $message,
-            'total' => $total,
-            'data' => $data,
         ], $status);
-    }
-
-    private static function resolveTotal(mixed $data): int
-    {
-        if ($data === null) {
-            return 0;
-        }
-
-        if (is_array($data) || $data instanceof Countable) {
-            return count($data);
-        }
-
-        return 1;
     }
 }

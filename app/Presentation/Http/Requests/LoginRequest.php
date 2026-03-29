@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Presentation\Http\Requests;
 
-use App\Presentation\Http\Responses\ApiResponse;
+use App\Domain\Exceptions\ValidationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 final class LoginRequest extends FormRequest
 {
@@ -30,13 +29,6 @@ final class LoginRequest extends FormRequest
 
     protected function failedValidation(Validator $validator): void
     {
-        throw new HttpResponseException(
-            ApiResponse::error(
-                message: 'Validation failed.',
-                status: 422,
-                data: ['errors' => $validator->errors()->toArray()],
-                total: 0,
-            )
-        );
+        throw new ValidationException($validator->errors()->first());
     }
 }
