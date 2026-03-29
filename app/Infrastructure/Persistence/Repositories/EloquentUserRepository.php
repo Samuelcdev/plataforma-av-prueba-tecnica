@@ -37,6 +37,13 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return $user ? $this->mapper->toEntity($user) : null;
     }
 
+    public function findByUsernameIncludingDeleted(string $username): ?UserEntity
+    {
+        $user = User::query()->withTrashed()->where('username', $username)->first();
+
+        return $user ? $this->mapper->toEntity($user) : null;
+    }
+
     public function save(UserEntity $userEntity): UserEntity
     {
         $user = User::query()->find($userEntity->getId()) ?? new User();
