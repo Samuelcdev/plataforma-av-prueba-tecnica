@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Persistence\Repositories;
 
 use App\Domain\Entities\UserEntity;
 use App\Domain\Repositories\UserRepositoryInterface;
-use App\Infrastructure\Mapper\UserMapper;
-use App\Models\User;
+use App\Infrastructure\Persistence\Mapper\UserMapper;
+use App\Infrastructure\Persistence\Models\User;
 use DateTimeImmutable;
 
 final class EloquentUserRepository implements UserRepositoryInterface

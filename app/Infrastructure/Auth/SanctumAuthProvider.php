@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Auth;
 
 use App\Domain\Exceptions\UnauthorizedDomainException;
-use App\Models\User;
+use App\Infrastructure\Persistence\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 final class SanctumAuthProvider implements SanctumAuthProviderInterface

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Persistence\Repositories;
 
 use App\Domain\Entities\OperativeEntity;
 use App\Domain\Repositories\OperativeRepositoryInterface;
-use App\Infrastructure\Mapper\OperativeMapper;
-use App\Models\Operative;
+use App\Infrastructure\Persistence\Mapper\OperativeMapper;
+use App\Infrastructure\Persistence\Models\Operative;
 
 final class EloquentOperativeRepository implements OperativeRepositoryInterface
 {

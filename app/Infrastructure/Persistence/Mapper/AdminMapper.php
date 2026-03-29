@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Mapper;
+namespace App\Infrastructure\Persistence\Mapper;
 
 use App\Domain\Entities\AdminEntity;
-use App\Models\Admin;
+use App\Infrastructure\Persistence\Models\Admin;
 use Illuminate\Support\Collection;
 
 final class AdminMapper

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources\Api\V1\Auth;
+namespace App\Presentation\Http\Resources;
 
 use App\Application\DTO\Auth\AuthPayloadDto;
 use Illuminate\Http\Request;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Presentation\http\Controllers\AuthController;
+use App\Presentation\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/v1')->group(function (): void {

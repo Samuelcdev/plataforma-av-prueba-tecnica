@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Persistence\Repositories;
 
 use App\Domain\Entities\AdminEntity;
 use App\Domain\Repositories\AdminRepositoryInterface;
-use App\Infrastructure\Mapper\AdminMapper;
-use App\Models\Admin;
+use App\Infrastructure\Persistence\Mapper\AdminMapper;
+use App\Infrastructure\Persistence\Models\Admin;
 
 final class EloquentAdminRepository implements AdminRepositoryInterface
 {

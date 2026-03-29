@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Mapper;
+namespace App\Infrastructure\Persistence\Mapper;
 
 use App\Domain\Entities\OrderEntity;
-use App\Models\Order;
+use App\Infrastructure\Persistence\Models\Order;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Illuminate\Support\Collection;

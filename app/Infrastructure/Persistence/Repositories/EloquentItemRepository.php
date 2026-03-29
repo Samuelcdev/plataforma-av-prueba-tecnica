@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Persistence\Repositories;
 
 use App\Domain\Entities\ItemEntity;
 use App\Domain\Repositories\ItemRepositoryInterface;
-use App\Infrastructure\Mapper\ItemMapper;
-use App\Models\Item;
+use App\Infrastructure\Persistence\Mapper\ItemMapper;
+use App\Infrastructure\Persistence\Models\Item;
 use DateTimeImmutable;
 
 final class EloquentItemRepository implements ItemRepositoryInterface

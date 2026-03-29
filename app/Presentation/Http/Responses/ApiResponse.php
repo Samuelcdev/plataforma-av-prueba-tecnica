@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Responses;
+namespace App\Presentation\Http\Responses;
 
 use Countable;
 use Illuminate\Http\JsonResponse;

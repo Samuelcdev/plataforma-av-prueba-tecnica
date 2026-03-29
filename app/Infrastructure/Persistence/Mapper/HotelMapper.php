@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Mapper;
+namespace App\Infrastructure\Persistence\Mapper;
 
 use App\Domain\Entities\HotelEntity;
-use App\Models\Hotel;
+use App\Infrastructure\Persistence\Models\Hotel;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Illuminate\Support\Collection;

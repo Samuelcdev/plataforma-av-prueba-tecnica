@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Persistence\Repositories;
 
 use App\Domain\Entities\HotelEntity;
 use App\Domain\Repositories\HotelRepositoryInterface;
-use App\Infrastructure\Mapper\HotelMapper;
-use App\Models\Hotel;
+use App\Infrastructure\Persistence\Mapper\HotelMapper;
+use App\Infrastructure\Persistence\Models\Hotel;
 use DateTimeImmutable;
 
 final class EloquentHotelRepository implements HotelRepositoryInterface

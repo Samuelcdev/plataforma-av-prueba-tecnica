@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Persistence\Repositories;
 
 use App\Domain\Entities\OrderEntity;
 use App\Domain\Repositories\OrderRepositoryInterface;
-use App\Infrastructure\Mapper\OrderMapper;
-use App\Models\Order;
+use App\Infrastructure\Persistence\Mapper\OrderMapper;
+use App\Infrastructure\Persistence\Models\Order;
 use DateTimeImmutable;
 
 final class EloquentOrderRepository implements OrderRepositoryInterface

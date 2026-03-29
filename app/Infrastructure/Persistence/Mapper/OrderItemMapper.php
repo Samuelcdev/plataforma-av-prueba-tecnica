@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Mapper;
+namespace App\Infrastructure\Persistence\Mapper;
 
 use App\Domain\Entities\OrderItemEntity;
-use App\Models\OrderItem;
+use App\Infrastructure\Persistence\Models\OrderItem;
 use Illuminate\Support\Collection;
 
 final class OrderItemMapper

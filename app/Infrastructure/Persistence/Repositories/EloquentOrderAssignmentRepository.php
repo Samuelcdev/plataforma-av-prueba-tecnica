@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Persistence\Repositories;
 
 use App\Domain\Entities\OrderAssignmentEntity;
 use App\Domain\Repositories\OrderAssignmentRepositoryInterface;
-use App\Infrastructure\Mapper\OrderAssignmentMapper;
-use App\Models\OrderAssignment;
+use App\Infrastructure\Persistence\Mapper\OrderAssignmentMapper;
+use App\Infrastructure\Persistence\Models\OrderAssignment;
 use DateTimeImmutable;
 
 final class EloquentOrderAssignmentRepository implements OrderAssignmentRepositoryInterface

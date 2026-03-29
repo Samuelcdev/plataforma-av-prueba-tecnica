@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Presentation\http\Controllers;
+namespace App\Presentation\Http\Controllers;
 
 use App\Application\DTO\Auth\CurrentUserDto;
 use App\Application\DTO\Auth\LoginDto;
@@ -11,11 +11,10 @@ use App\Domain\Exceptions\EntityNotFoundException;
 use App\Domain\Exceptions\InvalidCredentialsException;
 use App\Domain\Exceptions\UnauthorizedDomainException;
 use App\Domain\Exceptions\ValidationException as DomainValidationException;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\Auth\LoginRequest;
-use App\Http\Resources\Api\V1\Auth\AuthResource;
-use App\Http\Resources\Api\V1\Auth\UserResource;
-use App\Http\Responses\ApiResponse;
+use App\Presentation\Http\Requests\LoginRequest;
+use App\Presentation\Http\Resources\AuthResource;
+use App\Presentation\Http\Resources\UserResource;
+use App\Presentation\Http\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Throwable;
 

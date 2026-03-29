@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Persistence\Repositories;
 
 use App\Domain\Entities\OrderItemEntity;
 use App\Domain\Repositories\OrderItemRepositoryInterface;
-use App\Infrastructure\Mapper\OrderItemMapper;
-use App\Models\OrderItem;
+use App\Infrastructure\Persistence\Mapper\OrderItemMapper;
+use App\Infrastructure\Persistence\Models\OrderItem;
 
 final class EloquentOrderItemRepository implements OrderItemRepositoryInterface
 {

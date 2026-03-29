@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Api\V1\Auth;
+namespace App\Presentation\Http\Requests;
 
-use App\Http\Responses\ApiResponse;
+use App\Presentation\Http\Responses\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;

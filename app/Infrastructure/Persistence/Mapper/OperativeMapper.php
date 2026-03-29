@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Mapper;
+namespace App\Infrastructure\Persistence\Mapper;
 
 use App\Domain\Entities\OperativeEntity;
-use App\Models\Operative;
+use App\Infrastructure\Persistence\Models\Operative;
 use Illuminate\Support\Collection;
 
 final class OperativeMapper

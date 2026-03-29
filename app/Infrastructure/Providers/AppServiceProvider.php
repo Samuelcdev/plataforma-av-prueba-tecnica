@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Infrastructure\Providers;
 
 use App\Domain\Repositories\AdminRepositoryInterface;
 use App\Domain\Repositories\HotelRepositoryInterface;
@@ -13,15 +13,15 @@ use App\Domain\Repositories\RoleRepositoryInterface;
 use App\Domain\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Auth\SanctumAuthProvider;
 use App\Infrastructure\Auth\SanctumAuthProviderInterface;
-use App\Infrastructure\Repositories\EloquentAdminRepository;
-use App\Infrastructure\Repositories\EloquentHotelRepository;
-use App\Infrastructure\Repositories\EloquentItemRepository;
-use App\Infrastructure\Repositories\EloquentOperativeRepository;
-use App\Infrastructure\Repositories\EloquentOrderAssignmentRepository;
-use App\Infrastructure\Repositories\EloquentOrderItemRepository;
-use App\Infrastructure\Repositories\EloquentOrderRepository;
-use App\Infrastructure\Repositories\EloquentRoleRepository;
-use App\Infrastructure\Repositories\EloquentUserRepository;
+use App\Infrastructure\Persistence\Repositories\EloquentAdminRepository;
+use App\Infrastructure\Persistence\Repositories\EloquentHotelRepository;
+use App\Infrastructure\Persistence\Repositories\EloquentItemRepository;
+use App\Infrastructure\Persistence\Repositories\EloquentOperativeRepository;
+use App\Infrastructure\Persistence\Repositories\EloquentOrderAssignmentRepository;
+use App\Infrastructure\Persistence\Repositories\EloquentOrderItemRepository;
+use App\Infrastructure\Persistence\Repositories\EloquentOrderRepository;
+use App\Infrastructure\Persistence\Repositories\EloquentRoleRepository;
+use App\Infrastructure\Persistence\Repositories\EloquentUserRepository;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;

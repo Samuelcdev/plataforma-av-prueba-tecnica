@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Persistence\Repositories;
 
 use App\Domain\Entities\RoleEntity;
 use App\Domain\Repositories\RoleRepositoryInterface;
-use App\Infrastructure\Mapper\RoleMapper;
-use App\Models\Role;
+use App\Infrastructure\Persistence\Mapper\RoleMapper;
+use App\Infrastructure\Persistence\Models\Role;
 use DateTimeImmutable;
 
 final class EloquentRoleRepository implements RoleRepositoryInterface

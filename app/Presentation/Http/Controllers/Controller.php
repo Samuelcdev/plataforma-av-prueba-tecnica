@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Presentation\Http\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 
