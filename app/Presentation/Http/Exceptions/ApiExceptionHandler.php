@@ -6,6 +6,7 @@ namespace App\Presentation\Http\Exceptions;
 
 use App\Domain\Exceptions\DomainException;
 use App\Domain\Exceptions\EntityNotFoundException;
+use App\Domain\Exceptions\ConflictException;
 use App\Domain\Exceptions\InvalidCredentialsException;
 use App\Domain\Exceptions\UnauthorizedDomainException;
 use App\Domain\Exceptions\ValidationException as DomainValidationException;
@@ -27,6 +28,10 @@ final class ApiExceptionHandler
 
         $exceptions->render(function (EntityNotFoundException $e) {
             return ApiResponse::error($e->getMessage(), 404);
+        });
+
+        $exceptions->render(function (ConflictException $e) {
+            return ApiResponse::error($e->getMessage(), 409);
         });
 
         $exceptions->render(function (DomainValidationException $e) {
