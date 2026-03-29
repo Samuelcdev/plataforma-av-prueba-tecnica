@@ -15,7 +15,9 @@ use App\Domain\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Auth\SanctumAuthProvider;
 use App\Infrastructure\Auth\SanctumAuthProviderInterface;
 use App\Infrastructure\Auth\LaravelPasswordHasher;
-use App\Infrastructure\Logging\Providers\LoggingServiceProvider;
+use App\Infrastructure\Logging\MDCContext;
+use App\Infrastructure\Logging\LoggerInterface;
+use App\Infrastructure\Logging\Logger;
 use App\Infrastructure\Persistence\Repositories\EloquentAdminRepository;
 use App\Infrastructure\Persistence\Repositories\EloquentHotelRepository;
 use App\Infrastructure\Persistence\Repositories\EloquentItemRepository;
@@ -40,6 +42,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Register MDCContext as singleton
+        $this->app->singleton(MDCContext::class, function () {
+            return MDCContext::getInstance();
+        });
+
+        // Register Logger interface
+        $this->app->singleton(LoggerInterface::class, Logger::class);
+
         $this->app->bind(RoleRepositoryInterface::class, EloquentRoleRepository::class);
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(AdminRepositoryInterface::class, EloquentAdminRepository::class);
@@ -50,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(OrderItemRepositoryInterface::class, EloquentOrderItemRepository::class);
         $this->app->bind(OrderAssignmentRepositoryInterface::class, EloquentOrderAssignmentRepository::class);
         $this->app->bind(SanctumAuthProviderInterface::class, SanctumAuthProvider::class);
-$this->app->bind(PasswordHasherInterface::class, LaravelPasswordHasher::class);
+        $this->app->bind(PasswordHasherInterface::class, LaravelPasswordHasher::class);
     }
 
     /**
