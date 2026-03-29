@@ -30,9 +30,16 @@ final class EloquentHotelRepository implements HotelRepositoryInterface
         return $hotel ? $this->mapper->toEntity($hotel) : null;
     }
 
+    public function findByNit(string $nit): ?HotelEntity
+    {
+        $hotel = Hotel::query()->withTrashed()->where('nit', $nit)->first();
+
+        return $hotel ? $this->mapper->toEntity($hotel) : null;
+    }
+
     public function save(HotelEntity $hotelEntity): HotelEntity
     {
-        $hotel = Hotel::query()->find($hotelEntity->getId()) ?? new Hotel();
+        $hotel = Hotel::query()->withTrashed()->find($hotelEntity->getId()) ?? new Hotel();
 
         $hotel->id = $hotelEntity->getId();
         $hotel->user_id = $hotelEntity->getUserId();
@@ -48,6 +55,10 @@ final class EloquentHotelRepository implements HotelRepositoryInterface
 
         if ($hotelEntity->getUpdatedAt() !== null) {
             $hotel->updated_at = $this->toDatabaseDateTime($hotelEntity->getUpdatedAt());
+        }
+
+        if ($hotelEntity->getDeletedAt() !== null) {
+            $hotel->deleted_at = $this->toDatabaseDateTime($hotelEntity->getDeletedAt());
         }
 
         $hotel->save();

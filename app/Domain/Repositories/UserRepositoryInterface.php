@@ -14,6 +14,7 @@ interface UserRepositoryInterface
     public function all(): array;
     public function findById(string $id): ?UserEntity;
     public function findByUsername(string $username): ?UserEntity;
+    public function findByUsernameIncludingDeleted(string $username): ?UserEntity;
     public function save(UserEntity $user): UserEntity;
     public function deleteById(string $id): bool;
 }
