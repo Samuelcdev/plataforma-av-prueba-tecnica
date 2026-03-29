@@ -7,6 +7,7 @@ namespace App\Application\Services;
 use App\Application\DTO\Auth\AuthPayloadDto;
 use App\Application\DTO\Auth\CurrentUserDto;
 use App\Application\DTO\Auth\LoginDto;
+use App\Application\Security\PasswordHasherInterface;
 use App\Domain\Entities\UserEntity;
 use App\Domain\Exceptions\EntityNotFoundException;
 use App\Domain\Exceptions\InvalidCredentialsException;
@@ -14,13 +15,13 @@ use App\Domain\Exceptions\UnauthorizedDomainException;
 use App\Domain\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Auth\SanctumAuthProviderInterface;
 use DateTimeImmutable;
-use Illuminate\Support\Facades\Hash;
 
 final class AuthService
 {
     public function __construct(
         private UserRepositoryInterface $users,
         private SanctumAuthProviderInterface $sanctumAuth,
+        private PasswordHasherInterface $passwordHasher,
     ) {
     }
 
@@ -32,7 +33,7 @@ final class AuthService
             throw InvalidCredentialsException::default();
         }
 
-        if (! Hash::check($dto->getPassword(), $user->getPassword())) {
+        if (! $this->passwordHasher->verify($dto->getPassword(), $user->getPassword())) {
             throw InvalidCredentialsException::default();
         }
 

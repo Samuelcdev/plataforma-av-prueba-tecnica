@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Providers;
 
+use App\Application\Security\PasswordHasherInterface;
 use App\Domain\Repositories\AdminRepositoryInterface;
 use App\Domain\Repositories\HotelRepositoryInterface;
 use App\Domain\Repositories\ItemRepositoryInterface;
@@ -13,6 +14,8 @@ use App\Domain\Repositories\RoleRepositoryInterface;
 use App\Domain\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Auth\SanctumAuthProvider;
 use App\Infrastructure\Auth\SanctumAuthProviderInterface;
+use App\Infrastructure\Auth\LaravelPasswordHasher;
+use App\Infrastructure\Logging\Providers\LoggingServiceProvider;
 use App\Infrastructure\Persistence\Repositories\EloquentAdminRepository;
 use App\Infrastructure\Persistence\Repositories\EloquentHotelRepository;
 use App\Infrastructure\Persistence\Repositories\EloquentItemRepository;
@@ -47,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(OrderItemRepositoryInterface::class, EloquentOrderItemRepository::class);
         $this->app->bind(OrderAssignmentRepositoryInterface::class, EloquentOrderAssignmentRepository::class);
         $this->app->bind(SanctumAuthProviderInterface::class, SanctumAuthProvider::class);
+$this->app->bind(PasswordHasherInterface::class, LaravelPasswordHasher::class);
     }
 
     /**
