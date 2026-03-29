@@ -52,7 +52,7 @@ final class AuthService
     public function logout(CurrentUserDto $dto): void
     {
         if ($this->sanctumAuth->currentUserId() === null) {
-            throw UnauthorizedDomainException::accessDenied('Unauthenticated.');
+            throw UnauthorizedDomainException::accessDenied();
         }
 
         $this->sanctumAuth->revokeCurrentAccessToken();
@@ -63,7 +63,7 @@ final class AuthService
         $userId = $this->sanctumAuth->currentUserId();
 
         if ($userId === null) {
-            throw UnauthorizedDomainException::accessDenied('Unauthenticated.');
+            throw UnauthorizedDomainException::accessDenied();
         }
 
         $user = $this->users->findById($userId);

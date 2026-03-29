@@ -11,13 +11,13 @@ Route::prefix('/v1')->group(function (): void {
     Route::prefix('auth')->group(function (): void {
         Route::post('login', [AuthController::class, 'login'])->name('api.v1.auth.login');
 
-        Route::middleware('auth:sanctum')->group(function (): void {
+        Route::middleware('auth')->group(function (): void {
             Route::post('logout', [AuthController::class, 'logout'])->name('api.v1.auth.logout');
             Route::get('me', [AuthController::class, 'me'])->name('api.v1.auth.me');
         });
     });
 
-    Route::middleware('auth:sanctum')->prefix('hotels')->group(function (): void {
+    Route::middleware('auth')->prefix('hotels')->group(function (): void {
         Route::get('/', [HotelController::class, 'index'])->name('api.v1.hotels.index');
         Route::get('{id}', [HotelController::class, 'show'])->name('api.v1.hotels.show');
         Route::post('/', [HotelController::class, 'store'])->name('api.v1.hotels.store');

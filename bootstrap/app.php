@@ -1,5 +1,6 @@
 <?php
 
+use App\Application\Middleware\AuthMiddleware;
 use App\Application\Middleware\LoggingContextMiddleware;
 use App\Presentation\Http\Exceptions\ApiExceptionHandler;
 use Illuminate\Foundation\Application;
@@ -16,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+
+        $middleware->alias([
+            'auth' => AuthMiddleware::class,
+        ]);
 
         $middleware->use([
             LoggingContextMiddleware::class,

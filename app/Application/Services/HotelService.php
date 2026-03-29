@@ -135,7 +135,7 @@ final class HotelService
         $currentUserId = $this->sanctumAuth->currentUserId();
 
         if ($currentUserId === null) {
-            throw UnauthorizedDomainException::accessDenied('Unauthenticated.');
+            throw UnauthorizedDomainException::accessDenied();
         }
 
         $user = $this->users->findById($currentUserId);

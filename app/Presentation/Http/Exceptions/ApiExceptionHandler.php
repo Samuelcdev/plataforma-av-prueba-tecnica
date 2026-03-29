@@ -20,27 +20,27 @@ final class ApiExceptionHandler
     public static function register(Exceptions $exceptions): void
     {
         $exceptions->render(function (InvalidCredentialsException $e) {
-            app(LoggerInterface::class)->warning('Invalid credentials attempt');
+            app(LoggerInterface::class)->warning($e->getMessage());
             return ApiResponse::error($e->getMessage(), 401);
         });
 
         $exceptions->render(function (UnauthorizedDomainException $e) {
-            app(LoggerInterface::class)->warning('Unauthorized access attempt');
+            app(LoggerInterface::class)->warning($e->getMessage());
             return ApiResponse::error($e->getMessage(), 401);
         });
 
         $exceptions->render(function (EntityNotFoundException $e) {
-            app(LoggerInterface::class)->info('Entity not found');
+            app(LoggerInterface::class)->info($e->getMessage());
             return ApiResponse::error($e->getMessage(), 404);
         });
 
         $exceptions->render(function (ConflictException $e) {
-            app(LoggerInterface::class)->warning('Conflict detected');
+            app(LoggerInterface::class)->warning($e->getMessage());
             return ApiResponse::error($e->getMessage(), 409);
         });
 
         $exceptions->render(function (DomainValidationException $e) {
-            app(LoggerInterface::class)->warning('Validation error');
+            app(LoggerInterface::class)->warning($e->getMessage());
             return ApiResponse::error(
                 message: $e->getMessage(),
                 status: 422,
@@ -48,16 +48,14 @@ final class ApiExceptionHandler
         });
 
         $exceptions->render(function (DomainException $e) {
-            app(LoggerInterface::class)->error('Domain exception');
+            app(LoggerInterface::class)->error($e->getMessage());
             return ApiResponse::error($e->getMessage(), 400);
         });
 
         $exceptions->render(function (Throwable $e) {
-            app(LoggerInterface::class)->critical('Unhandled exception', [
-                'exception' => $e->getMessage(),
+            app(LoggerInterface::class)->critical('Unhandled exception: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
             ]);
 
             return ApiResponse::error(
