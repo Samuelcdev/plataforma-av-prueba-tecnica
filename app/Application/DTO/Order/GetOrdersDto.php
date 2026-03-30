@@ -13,6 +13,8 @@ final class GetOrdersDto
         private string $sort = 'start_date',
         private string $order = 'asc',
         private ?string $startFrom = null,
+        private ?string $status = null,
+        private ?string $date = null,
     ) {
     }
 
@@ -44,5 +46,15 @@ final class GetOrdersDto
     public function getStartFrom(): ?string
     {
         return $this->startFrom;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function getDate(): ?string
+    {
+        return $this->date;
     }
 }

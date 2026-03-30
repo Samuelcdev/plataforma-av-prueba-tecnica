@@ -40,6 +40,8 @@ final class OrderController extends Controller
             sort: isset($payload['sort']) ? (string) $payload['sort'] : 'start_date',
             order: isset($payload['order']) ? (string) $payload['order'] : 'asc',
             startFrom: $startFrom,
+            status: isset($payload['status']) ? trim((string) $payload['status']) : null,
+            date: isset($payload['date']) ? trim((string) $payload['date']) : null,
         );
         $result = $this->orderService->index($dto);
 

@@ -13,6 +13,10 @@ const EventsTemplate = ({
   onCreateClick,
   searchValue,
   onSearchChange,
+  statusValue,
+  onStatusChange,
+  dateValue,
+  onDateChange,
   page,
   total,
   pageSize,
@@ -47,6 +51,10 @@ const EventsTemplate = ({
           onCreateClick={onCreateClick}
           searchValue={searchValue}
           onSearchChange={onSearchChange}
+          statusValue={statusValue}
+          onStatusChange={onStatusChange}
+          dateValue={dateValue}
+          onDateChange={onDateChange}
           page={page}
           total={total}
           pageSize={pageSize}

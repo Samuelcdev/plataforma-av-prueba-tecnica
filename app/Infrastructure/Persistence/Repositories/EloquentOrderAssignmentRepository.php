@@ -71,6 +71,32 @@ final class EloquentOrderAssignmentRepository implements OrderAssignmentReposito
 
         return $orderAssignment ? (bool) $orderAssignment->delete() : false;
     }
+
+    /**
+     * @return array<int, array{order_id:string, start_date:string, end_date:string}>
+     */
+    public function findAssignmentsWithOrderWindow(string $operativeId): array
+    {
+        $rows = OrderAssignment::query()
+            ->select([
+                'order_assignments.order_id',
+                'orders.start_date',
+                'orders.end_date',
+            ])
+            ->join('orders', 'orders.id', '=', 'order_assignments.order_id')
+            ->where('operative_id', $operativeId)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'order_id' => (string) $item->order_id,
+                    'start_date' => (string) $item->start_date,
+                    'end_date' => (string) $item->end_date,
+                ];
+            })
+            ->all();
+
+        return $rows;
+    }
     private function toDatabaseDateTime(?DateTimeImmutable $value): ?string
     {
         return $value?->format('Y-m-d H:i:s');

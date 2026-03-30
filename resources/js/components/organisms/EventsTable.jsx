@@ -24,6 +24,10 @@ const EventsTable = ({
   onCreateClick,
   searchValue = '',
   onSearchChange,
+  statusValue = '',
+  onStatusChange,
+  dateValue = '',
+  onDateChange,
   page = 1,
   total = 0,
   pageSize = 10,
@@ -33,7 +37,7 @@ const EventsTable = ({
   return (
     <div className="card border border-base-300 bg-base-100 shadow-sm">
       <div className="card-body gap-4 p-4 sm:p-6">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <SearchInput
             value={searchValue}
             onChange={onSearchChange}
@@ -41,11 +45,31 @@ const EventsTable = ({
             className="w-full max-w-xl"
             inputClassName="input input-bordered bg-base-100 focus:bg-base-100"
           />
-          {isHotel ? (
-            <button type="button" className="btn btn-primary" onClick={onCreateClick}>
-              Crear evento
-            </button>
-          ) : null}
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+            <input
+              type="date"
+              value={dateValue}
+              onChange={onDateChange}
+              className="input input-bordered"
+              aria-label="Filtrar por fecha"
+            />
+            <select
+              value={statusValue}
+              onChange={onStatusChange}
+              className="select select-bordered"
+              aria-label="Filtrar por estado"
+            >
+              <option value="">Todos los estados</option>
+              <option value="active">Activo</option>
+              <option value="pending">Pendiente</option>
+              <option value="cancelled">Cancelado</option>
+            </select>
+            {isHotel ? (
+              <button type="button" className="btn btn-primary" onClick={onCreateClick}>
+                Crear evento
+              </button>
+            ) : null}
+          </div>
         </div>
 
         <div className="overflow-x-auto rounded-box border border-base-300">

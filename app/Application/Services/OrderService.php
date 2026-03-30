@@ -19,6 +19,7 @@ use App\Domain\Exceptions\ConflictException;
 use App\Domain\Exceptions\EntityNotFoundException;
 use App\Domain\Exceptions\UnauthorizedDomainException;
 use App\Domain\Exceptions\ValidationException;
+use App\Domain\Exceptions\DomainException;
 use App\Domain\Repositories\AdminRepositoryInterface;
 use App\Domain\Repositories\HotelRepositoryInterface;
 use App\Domain\Repositories\ItemRepositoryInterface;
@@ -66,6 +67,8 @@ final class OrderService
             'sort' => $dto->getSort(),
             'order' => $dto->getOrder(),
             'start_from' => $dto->getStartFrom(),
+            'status' => $dto->getStatus(),
+            'date' => $dto->getDate(),
         ];
 
         if ($user->getRoleId() === self::ADMIN_ROLE_ID) {
@@ -176,9 +179,10 @@ final class OrderService
 
         $this->assertOrderIsActive($order);
 
-        DB::transaction(function () use ($dto, $admin, $order): void {
-            $operativeIds = array_values(array_unique($dto->getOperativeIds()));
+        $operativeIds = array_values(array_unique($dto->getOperativeIds()));
+        $this->assertOperativesAvailable($order, $operativeIds);
 
+        DB::transaction(function () use ($dto, $admin, $order, $operativeIds): void {
             foreach ($operativeIds as $operativeId) {
                 $operative = $this->operatives->findById($operativeId);
 
@@ -258,6 +262,41 @@ final class OrderService
 
             $this->orderItems->save($orderItem);
         }
+    }
+
+    /**
+     * @param list<string> $operativeIds
+     */
+    private function assertOperativesAvailable(OrderEntity $order, array $operativeIds): void
+    {
+        $orderStart = $order->getStartDate();
+        $orderEnd = $order->getEndDate();
+
+        foreach ($operativeIds as $operativeId) {
+            $assignments = $this->orderAssignments->findAssignmentsWithOrderWindow($operativeId);
+
+            foreach ($assignments as $assignment) {
+                if ($assignment['order_id'] === $order->getId()) {
+                    continue;
+                }
+
+                $start = new DateTimeImmutable($assignment['start_date']);
+                $end = new DateTimeImmutable($assignment['end_date']);
+
+                if ($this->rangesOverlap($orderStart, $orderEnd, $start, $end)) {
+                    throw new DomainException(
+                        sprintf('Operative [%s] is already assigned to another event in the requested time window.', $operativeId),
+                        ['operative_id' => $operativeId, 'conflict_order_id' => $assignment['order_id']],
+                        'operative.occupied'
+                    );
+                }
+            }
+        }
+    }
+
+    private function rangesOverlap(DateTimeImmutable $startA, DateTimeImmutable $endA, DateTimeImmutable $startB, DateTimeImmutable $endB): bool
+    {
+        return $startA < $endB && $endA > $startB;
     }
 
     /**

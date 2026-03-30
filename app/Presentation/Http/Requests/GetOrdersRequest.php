@@ -27,6 +27,8 @@ final class GetOrdersRequest extends FormRequest
             'sort' => ['nullable', 'string', 'in:start_date,created_at'],
             'order' => ['nullable', 'string', 'in:asc,desc'],
             'start_from' => ['nullable', 'date'],
+            'status' => ['nullable', 'string', 'in:active,pending,cancelled'],
+            'date' => ['nullable', 'date_format:Y-m-d'],
         ];
     }
 

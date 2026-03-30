@@ -139,6 +139,16 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
             $query->where('start_date', '>=', $startFrom);
         }
 
+        $status = trim((string) ($filters['status'] ?? ''));
+        if ($status !== '') {
+            $query->where('status', $status);
+        }
+
+        $date = $filters['date'] ?? null;
+        if (is_string($date) && trim($date) !== '') {
+            $query->whereDate('start_date', $date);
+        }
+
         return [$sort, $order];
     }
 

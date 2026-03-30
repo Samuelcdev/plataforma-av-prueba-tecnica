@@ -28,6 +28,8 @@ const Events = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearch = useDebouncedValue(searchTerm, 400);
+  const [statusFilter, setStatusFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
@@ -68,7 +70,7 @@ const Events = () => {
     confirmButtonColor: 'var(--color-primary)',
   };
 
-  const fetchOrders = async (search, pageValue) => {
+  const fetchOrders = async (search, pageValue, status, date) => {
     try {
       setLoading(true);
       setError(null);
@@ -77,6 +79,8 @@ const Events = () => {
         ...config,
         params: {
           search: search.trim() !== '' ? search.trim() : undefined,
+          status: status !== '' ? status : undefined,
+          date: date !== '' ? date : undefined,
           page: pageValue,
           total: PAGE_SIZE,
         },
@@ -159,8 +163,8 @@ const Events = () => {
 
   useEffect(() => {
     if (!token) return;
-    fetchOrders(debouncedSearch, page);
-  }, [token, debouncedSearch, page]);
+    fetchOrders(debouncedSearch, page, statusFilter, dateFilter);
+  }, [token, debouncedSearch, statusFilter, dateFilter, page]);
 
   useEffect(() => {
     if (!isHotel) return;
@@ -261,7 +265,7 @@ const Events = () => {
       setShowCreateModal(false);
       setCreateForm(EMPTY_CREATE_FORM);
       setSuccess('Evento creado correctamente.');
-      fetchOrders(debouncedSearch, page);
+      fetchOrders(debouncedSearch, page, statusFilter, dateFilter);
       await Swal.fire({
         title: 'Evento creado',
         text: 'El evento se registró correctamente.',
@@ -374,6 +378,16 @@ const Events = () => {
       searchValue={searchTerm}
       onSearchChange={(event) => {
         setSearchTerm(event.target.value);
+        setPage(1);
+      }}
+      statusValue={statusFilter}
+      onStatusChange={(event) => {
+        setStatusFilter(event.target.value);
+        setPage(1);
+      }}
+      dateValue={dateFilter}
+      onDateChange={(event) => {
+        setDateFilter(event.target.value);
         setPage(1);
       }}
       page={page}
