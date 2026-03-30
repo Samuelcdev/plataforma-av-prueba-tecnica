@@ -6,6 +6,7 @@ import { PasswordField } from '../molecules/PasswordField';
 import { useAuth } from '../../contexts/AuthContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 export function LoginForm() {
     const [username, setUsername] = useState('');
@@ -19,7 +20,6 @@ export function LoginForm() {
         e.preventDefault();
         setProcessing(true);
         setError(null);
-        console.log('que carajobich');
 
         try {
             let response = await axios.post('/api/v1/auth/login', {
@@ -30,11 +30,24 @@ export function LoginForm() {
 
             response = response.data;
 
-            console.log(response);
             if (!response.success) return;
 
-            login(response.data.token, response.data.user);
-            navigate('/dashboard');
+            const result = await Swal.fire({
+                title: 'Inicio de sesión exitoso',
+                text: `Bienvenido, ${response.data.user?.username || 'usuario'}.`,
+                icon: 'success',
+                confirmButtonText: 'Continuar',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                background: 'var(--color-base-100)',
+                color: 'var(--color-base-content)',
+                confirmButtonColor: 'var(--color-primary)',
+            });
+
+            if (result.isConfirmed) {
+                login(response.data.token, response.data.user);
+                navigate('/dashboard');
+            }
         } catch (err) {
             setError(err.response?.data?.message || 'Error de autenticación. Verifica tus credenciales.');
         } finally {

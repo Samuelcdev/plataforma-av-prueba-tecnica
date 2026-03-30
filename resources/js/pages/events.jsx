@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import EventsTemplate from '../components/templates/EventsTemplate';
 import Modal from '../components/atoms/Modal';
 import useDebouncedValue from '../hooks/useDebouncedValue';
+import Swal from 'sweetalert2';
 
 const PAGE_SIZE = 10;
 
@@ -60,6 +61,12 @@ const Events = () => {
     });
     return map;
   }, [operativeOptions]);
+
+  const swalTheme = {
+    background: 'var(--color-base-100)',
+    color: 'var(--color-base-content)',
+    confirmButtonColor: 'var(--color-primary)',
+  };
 
   const fetchOrders = async (search, pageValue) => {
     try {
@@ -254,6 +261,15 @@ const Events = () => {
       setCreateForm(EMPTY_CREATE_FORM);
       setSuccess('Evento creado correctamente.');
       fetchOrders(debouncedSearch, page);
+      await Swal.fire({
+        title: 'Evento creado',
+        text: 'El evento se registró correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Continuar',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        ...swalTheme,
+      });
     } catch (err) {
       console.error('Error creating order:', err);
       setError(err.response?.data?.message || 'No fue posible crear el evento');
@@ -287,11 +303,61 @@ const Events = () => {
       setSelectedOrder(updatedOrder);
       setOrders((prev) => prev.map((order) => (order.id === updatedOrder.id ? updatedOrder : order)));
       setSuccess('Personal operativo actualizado correctamente.');
+      await Swal.fire({
+        title: 'Evento actualizado',
+        text: 'La asignación de operativos se actualizó correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Continuar',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        ...swalTheme,
+      });
     } catch (err) {
       console.error('Error assigning operatives:', err);
       setError(err.response?.data?.message || 'No fue posible actualizar la asignación');
     } finally {
       setSavingOperatives(false);
+    }
+  };
+
+  const handleCancelEvent = async () => {
+    if (!selectedOrder || !isHotel || selectedOrder.status === 'cancelled') return;
+
+    const result = await Swal.fire({
+      title: '¿Eliminar evento?',
+      text: 'El evento se marcará como cancelado.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      ...swalTheme,
+      cancelButtonColor: 'var(--color-neutral)',
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      setError(null);
+      setSuccess(null);
+      const response = await axios.post(`/api/v1/orders/${selectedOrder.id}/cancel`, {}, config);
+      const cancelledOrder = response.data.data;
+      setSelectedOrder(cancelledOrder);
+      setOrders((prev) => prev.map((order) => (order.id === cancelledOrder.id ? cancelledOrder : order)));
+      setShowDetailModal(false);
+      await Swal.fire({
+        title: 'Evento eliminado',
+        text: 'El evento fue cancelado correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Continuar',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        ...swalTheme,
+      });
+    } catch (err) {
+      console.error('Error cancelling order:', err);
+      setError(err.response?.data?.message || 'No fue posible eliminar el evento');
     }
   };
 
@@ -352,6 +418,15 @@ const Events = () => {
                 disabled={savingOperatives}
               >
                 {savingOperatives ? <span className="loading loading-spinner loading-xs" /> : 'Guardar asignación'}
+              </button>
+            ) : null}
+            {isHotel && selectedOrder?.status !== 'cancelled' ? (
+              <button
+                type="button"
+                className="btn btn-error btn-outline"
+                onClick={handleCancelEvent}
+              >
+                Eliminar evento
               </button>
             ) : null}
           </>

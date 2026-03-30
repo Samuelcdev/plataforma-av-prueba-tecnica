@@ -24,7 +24,7 @@ const Modal = ({
     if (!dialog) return;
 
     if (isOpen && !dialog.open) {
-      dialog.showModal();
+      dialog.show();
     }
 
     if (!isOpen && dialog.open) {
@@ -65,7 +65,7 @@ const Modal = ({
         if (isOpen) onClose?.();
       }}
     >
-      <div className={`modal-box w-11/12 ${sizeClasses[size] || sizeClasses.md}`}>
+      <div className={`modal-box z-50 w-11/12 ${sizeClasses[size] || sizeClasses.md}`}>
         <div className="mb-4 flex items-start justify-between gap-3">
           {title ? <h3 className="text-lg font-semibold">{title}</h3> : <span />}
           <button

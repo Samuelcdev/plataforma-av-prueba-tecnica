@@ -5,6 +5,7 @@ import HotelsTemplate from '../components/templates/HotelsTemplate';
 import Modal from '../components/atoms/Modal';
 import HotelForm from '../components/organisms/HotelForm';
 import useDebouncedValue from '../hooks/useDebouncedValue';
+import Swal from 'sweetalert2';
 
 const EMPTY_FORM = {
   username: '',
@@ -149,8 +150,27 @@ const Hotels = () => {
     return Object.keys(errors).length === 0;
   };
 
+  const swalTheme = {
+    background: 'var(--color-base-100)',
+    color: 'var(--color-base-content)',
+    confirmButtonColor: 'var(--color-primary)',
+  };
+
   const handleDeleteClick = async (hotelId) => {
-    if (!window.confirm('¿Estás seguro de eliminar este hotel?')) return;
+    const result = await Swal.fire({
+      title: '¿Eliminar hotel?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      ...swalTheme,
+      cancelButtonColor: 'var(--color-neutral)',
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       setIsDeleting(true);
@@ -159,6 +179,15 @@ const Hotels = () => {
       setHotels((prev) => prev.filter((hotel) => hotel.id !== hotelId));
       setShowDetailModal(false);
       setSelectedHotel(null);
+      await Swal.fire({
+        title: 'Hotel eliminado',
+        text: 'El hotel se eliminó correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Continuar',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        ...swalTheme,
+      });
     } catch (err) {
       console.error('Error deleting hotel:', err);
       setError(err.response?.data?.message || 'Error al eliminar el hotel');
@@ -180,10 +209,28 @@ const Hotels = () => {
         const response = await axios.put(`/api/v1/hotels/${hotelId}`, formData, config);
         const updatedHotel = normalizeHotel(response.data.data || response.data);
         setHotels((prev) => prev.map((hotel) => (hotel.id === hotelId ? updatedHotel : hotel)));
+        await Swal.fire({
+          title: 'Hotel actualizado',
+          text: 'Los cambios se guardaron correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Continuar',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          ...swalTheme,
+        });
       } else {
         const response = await axios.post('/api/v1/hotels', formData, config);
         const newHotel = normalizeHotel(response.data.data || response.data);
         setHotels((prev) => [...prev, newHotel]);
+        await Swal.fire({
+          title: 'Hotel creado',
+          text: 'El hotel se registró correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Continuar',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          ...swalTheme,
+        });
       }
 
       setShowFormModal(false);

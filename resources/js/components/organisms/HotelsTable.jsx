@@ -30,7 +30,7 @@ const HotelsTable = ({
             <thead>
               <tr>
                 <th>Usuario</th>
-                <th>NIT</th>
+                <th>Documento</th>
                 <th>Nombre</th>
                 <th>Teléfono</th>
                 <th>Dirección</th>
@@ -58,7 +58,7 @@ const HotelsTable = ({
                     onClick={() => onRowClick?.(hotel)}
                   >
                     <td>{hotel.user?.username || hotel.username || '-'}</td>
-                    <td>{hotel.nit || '-'}</td>
+                    <td>{hotel.document_type + " " + hotel.nit || '-'}</td>
                     <td>{hotel.name || '-'}</td>
                     <td>{hotel.phone || '-'}</td>
                     <td className="max-w-72 truncate">{hotel.address || '-'}</td>

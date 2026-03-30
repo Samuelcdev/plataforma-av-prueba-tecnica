@@ -2,6 +2,7 @@ import React from 'react';
 import Input from '../atoms/Input';
 import Textarea from '../atoms/Textarea';
 import { Label } from '../atoms/Label';
+import Select from '../atoms/Select';
 
 const HotelForm = ({
   formId = 'hotel-form',
@@ -50,25 +51,21 @@ const HotelForm = ({
         {errors.nit ? <p className="mt-1 text-[12px] text-red-600">{errors.nit}</p> : null}
       </div>
 
-      <div>
-        <Label htmlFor="hotel-document-type">Tipo de Documento *</Label>
-        <select
-          id="hotel-document-type"
-          name="document_type"
-          className={`w-full px-4 py-2.5 bg-[#F5F5F5] border-transparent rounded-xl text-sm text-gray-800 focus:bg-white focus:border-gray-200 focus:ring-2 focus:ring-[#F5B505]/20 focus:outline-none transition-all ${
-            errors.document_type ? 'ring-2 ring-red-500/40' : ''
-          }`}
-          value={formData.document_type}
-          onChange={handleInputChange}
-          disabled={isLoading}
-        >
-          <option value="CC">CC - Cédula de Ciudadanía</option>
-          <option value="NIT">NIT - Número de Identificación Tributaria</option>
-          <option value="CE">CE - Cédula de Extranjería</option>
-          <option value="PP">PP - Pasaporte</option>
-        </select>
-        {errors.document_type ? <p className="mt-1 text-[12px] text-red-600">{errors.document_type}</p> : null}
-      </div>
+      <Select
+        label="Tipo de Documento"
+        name="document_type"
+        value={formData.document_type}
+        onChange={handleInputChange}
+        required={true}
+        disabled={isLoading}
+        error={errors.document_type}
+        options={[
+          { value: 'CC', label: 'CC - Cédula de Ciudadanía' },
+          { value: 'NIT', label: 'NIT - Número de Identificación Tributaria' },
+          { value: 'CE', label: 'CE - Cédula de Extranjería' },
+          { value: 'PP', label: 'PP - Pasaporte' },
+        ]}
+      />
 
       <div>
         <Label htmlFor="hotel-name">Nombre del Hotel *</Label>
