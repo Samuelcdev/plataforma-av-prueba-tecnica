@@ -22,21 +22,7 @@ docker exec -i plataforma-bd mysql -uroot -proot -e "
   "
 ```
 
-## 3. Ejecutar tests completos en sandbox
-
-```bash
-docker exec -it \
-  -e APP_ENV=testing \
-  -e DB_CONNECTION=mysql \
-  -e DB_HOST=db \
-  -e DB_PORT=3306 \
-  -e DB_DATABASE=plataforma_test \
-  -e DB_USERNAME=admin \
-  -e DB_PASSWORD=admin \
-  laravel-app php artisan test
-```
-
-## 4. Ejecutar solo pruebas API en sandbox
+## 3. Ejecutar pruebas de API en sandbox
 
 ```bash
 docker exec -it \
@@ -50,7 +36,7 @@ docker exec -it \
   laravel-app php artisan test --filter=Api
 ```
 
-## 5. Ejecutar una suite específica
+## 4. Ejecutar una suite específica
 
 ```bash
 docker exec -it \
@@ -64,7 +50,7 @@ docker exec -it \
   laravel-app php artisan test --filter=ApiOrdersTest
 ```
 
-## 6. Limpieza y reinicio del sandbox
+## 5. Limpieza y reinicio del sandbox
 
 ```bash
 docker compose down
