@@ -1,16 +1,49 @@
 services:
-  mysql:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel-app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    networks:
+      - laravel
+
+  db:
     image: mysql:8.0
     container_name: plataforma-bd
     environment:
-      MYSQL_ROOT_PASSWORD: 12345
       MYSQL_DATABASE: plataforma_db
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: root
     ports:
       - "3307:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
+    networks:
+      - laravel
+
+  node:
+    image: node:20-alpine
+    container_name: laravel-node
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    networks:
+      - laravel
 
 volumes:
-  mysql_data:
+  db_data:
+
+networks:
+  laravel:
