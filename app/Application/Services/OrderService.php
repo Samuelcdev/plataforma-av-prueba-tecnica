@@ -36,6 +36,7 @@ final class OrderService
     private const ADMIN_ROLE_ID = 1;
     private const HOTEL_ROLE_ID = 2;
     private const STATUS_ACTIVE = 'active';
+    private const STATUS_PENDING = 'pending';
     private const STATUS_CANCELLED = 'cancelled';
 
     public function __construct(
@@ -335,8 +336,9 @@ final class OrderService
 
     private function assertOrderIsActive(OrderEntity $order): void
     {
-        if ($order->getStatus() !== self::STATUS_ACTIVE) {
-            throw ConflictException::because(sprintf('Order [%s] is not active.', $order->getId()));
+        $allowedStatuses = [self::STATUS_ACTIVE, self::STATUS_PENDING];
+        if (! in_array($order->getStatus(), $allowedStatuses, true)) {
+            throw ConflictException::because(sprintf('Order [%s] is not in a manageable state.', $order->getId()));
         }
     }
 
