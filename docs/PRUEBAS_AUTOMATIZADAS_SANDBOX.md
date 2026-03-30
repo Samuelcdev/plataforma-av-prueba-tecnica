@@ -1,0 +1,74 @@
+# Pruebas automatizadas en entorno sandbox
+
+## Objetivo
+
+Esta guía explica cómo ejecutar pruebas automatizadas en un entorno aislado (sandbox) usando Docker, sin afectar datos de desarrollo o producción.
+
+## 1. Levantar servicios del sandbox
+
+Desde la raíz del proyecto:
+
+```bash
+docker compose up -d --build
+```
+
+## 2. Crear base de datos de pruebas aislada
+
+```bash
+docker exec -it plataforma-bd mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS plataforma_test;"
+```
+
+## 3. Ejecutar tests completos en sandbox
+
+```bash
+docker exec -it \
+  -e APP_ENV=testing \
+  -e DB_CONNECTION=mysql \
+  -e DB_HOST=db \
+  -e DB_PORT=3306 \
+  -e DB_DATABASE=plataforma_test \
+  -e DB_USERNAME=admin \
+  -e DB_PASSWORD=admin \
+  laravel-app php artisan test
+```
+
+## 4. Ejecutar solo pruebas API en sandbox
+
+```bash
+docker exec -it \
+  -e APP_ENV=testing \
+  -e DB_CONNECTION=mysql \
+  -e DB_HOST=db \
+  -e DB_PORT=3306 \
+  -e DB_DATABASE=plataforma_test \
+  -e DB_USERNAME=admin \
+  -e DB_PASSWORD=admin \
+  laravel-app php artisan test --filter=Api
+```
+
+## 5. Ejecutar una suite específica
+
+```bash
+docker exec -it \
+  -e APP_ENV=testing \
+  -e DB_CONNECTION=mysql \
+  -e DB_HOST=db \
+  -e DB_PORT=3306 \
+  -e DB_DATABASE=plataforma_test \
+  -e DB_USERNAME=admin \
+  -e DB_PASSWORD=admin \
+  laravel-app php artisan test --filter=ApiOrdersTest
+```
+
+## 6. Limpieza y reinicio del sandbox
+
+```bash
+docker compose down
+```
+
+Reinicio limpio borrando volúmenes:
+
+```bash
+docker compose down -v
+docker compose up -d --build
+```
