@@ -1,14 +1,19 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 
-export const Input = forwardRef(
-    ({ className = '', hasIcon = false, hasRightIcon = false, ...props }, ref) => {
-        return (
-            <input
-                ref={ref}
-                className={`w-full py-4 bg-[#F5F5F5]/60 hover:bg-[#F5F5F5] border border-transparent focus:border-[#F5B505]/30 focus:bg-white rounded-xl text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-[#F5B505]/10 transition-all font-medium text-[15px] ${hasIcon ? 'pl-11' : 'pl-4'} ${hasRightIcon ? 'pr-12' : 'pr-4'} ${className}`}
-                {...props}
-            />
-        );
-    }
-);
-Input.displayName = 'Input';
+export const Input = ({ className = '', icon: Icon, hasIcon, ...props }) => {
+  return (
+    <div className={`relative ${className} w-full`}>
+      {Icon && (
+        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+          <Icon size={18} className="text-gray-400" />
+        </div>
+      )}
+      <input
+        className={`w-full ${hasIcon || Icon ? 'pl-10' : 'px-4'} pr-4 py-2.5 bg-[#F5F5F5] border-transparent rounded-xl text-sm text-gray-800 focus:bg-white focus:border-gray-200 focus:ring-2 focus:ring-[#F5B505]/20 focus:outline-none transition-all placeholder:text-gray-400`}
+        {...props}
+      />
+    </div>
+  );
+};
+
+export default Input;

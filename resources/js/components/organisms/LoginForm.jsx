@@ -5,6 +5,7 @@ import { FormGroup } from '../molecules/FormGroup';
 import { PasswordField } from '../molecules/PasswordField';
 import { useAuth } from '../../contexts/AuthContext';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export function LoginForm() {
     const [username, setUsername] = useState('');
@@ -12,6 +13,7 @@ export function LoginForm() {
     const [processing, setProcessing] = useState(false);
     const [error, setError] = useState(null);
     const { login } = useAuth();
+    const navigate = useNavigate();
 
     const submit = async (e) => {
         e.preventDefault();
@@ -25,12 +27,12 @@ export function LoginForm() {
                 device_name: 'web'
             });
 
-            if (response.data && response.data.token) {
-                login(response.data.token, response.data.user);
+            if (response.data && response.data.data.token) {
+                login(response.data.data.token, response.data.data.user);
                 console.log('Login successful');
+                navigate('/dashboard');
             }
         } catch (err) {
-            console.error('Login error', err);
             setError(err.response?.data?.message || 'Error de autenticación. Verifica tus credenciales.');
         } finally {
             setProcessing(false);

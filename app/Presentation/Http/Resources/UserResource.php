@@ -19,6 +19,7 @@ final class UserResource
         return [
             'id' => $user->getId(),
             'username' => $user->getUsername(),
+            'role_id' => $user->getRoleId(),
             'is_active' => $user->getIsActive(),
             'last_login_at' => $user->getLastLoginAt()?->format(DATE_ATOM),
             'created_at' => $user->getCreatedAt()?->format(DATE_ATOM),
