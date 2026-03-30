@@ -8,7 +8,7 @@ use App\Domain\Exceptions\ValidationException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class AssignOrderOperativesRequest extends FormRequest
+final class GetOrdersRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -21,8 +21,9 @@ final class AssignOrderOperativesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'operative_ids' => ['required', 'array'],
-            'operative_ids.*' => ['required', 'string', 'uuid', 'distinct'],
+            'search' => ['nullable', 'string', 'max:150'],
+            'page' => ['nullable', 'integer', 'min:1'],
+            'total' => ['nullable', 'integer', 'min:1', 'max:100'],
         ];
     }
 

@@ -7,11 +7,13 @@ namespace App\Presentation\Http\Controllers;
 use App\Application\DTO\Order\AssignOrderOperativesDto;
 use App\Application\DTO\Order\CancelOrderDto;
 use App\Application\DTO\Order\CreateOrderDto;
+use App\Application\DTO\Order\GetOrdersDto;
 use App\Application\DTO\Order\OrderItemInputDto;
 use App\Application\DTO\Order\UpdateOrderDto;
 use App\Application\Services\OrderService;
 use App\Presentation\Http\Requests\AssignOrderOperativesRequest;
 use App\Presentation\Http\Requests\CancelOrderRequest;
+use App\Presentation\Http\Requests\GetOrdersRequest;
 use App\Presentation\Http\Requests\StoreOrderRequest;
 use App\Presentation\Http\Requests\UpdateOrderRequest;
 use App\Presentation\Http\Resources\OrderResource;
@@ -25,15 +27,22 @@ final class OrderController extends Controller
     {
     }
 
-    public function index(): JsonResponse
+    public function index(GetOrdersRequest $request): JsonResponse
     {
-        $orders = $this->orderService->index();
+        $payload = $request->validated();
+        $dto = new GetOrdersDto(
+            search: isset($payload['search']) ? trim((string) $payload['search']) : null,
+            page: isset($payload['page']) ? (int) $payload['page'] : 1,
+            total: isset($payload['total']) ? (int) $payload['total'] : 10,
+        );
+        $result = $this->orderService->index($dto);
 
         return ApiResponse::success(
             data: array_map(
                 static fn ($order): array => OrderResource::toArray($order),
-                $orders,
+                $result['orders'],
             ),
+            total: $result['total'],
             message: 'Orders retrieved',
             status: 200,
         );

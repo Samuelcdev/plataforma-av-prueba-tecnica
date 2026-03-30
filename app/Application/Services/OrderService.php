@@ -7,6 +7,7 @@ namespace App\Application\Services;
 use App\Application\DTO\Order\AssignOrderOperativesDto;
 use App\Application\DTO\Order\CancelOrderDto;
 use App\Application\DTO\Order\CreateOrderDto;
+use App\Application\DTO\Order\GetOrdersDto;
 use App\Application\DTO\Order\OrderItemInputDto;
 use App\Application\DTO\Order\OrderPayloadDto;
 use App\Application\DTO\Order\UpdateOrderDto;
@@ -53,29 +54,42 @@ final class OrderService
     }
 
     /**
-     * @return list<OrderPayloadDto>
+     * @return array{orders: list<OrderPayloadDto>, total: int}
      */
-    public function index(): array
+    public function index(GetOrdersDto $dto): array
     {
         $user = $this->getAuthenticatedUser();
+        $filters = [
+            'search' => $dto->getSearch(),
+            'page' => $dto->getPage(),
+            'total' => $dto->getTotal(),
+        ];
 
         if ($user->getRoleId() === self::ADMIN_ROLE_ID) {
-            $orders = $this->orders->all();
+            $orders = $this->orders->all($filters);
+            $total = $this->orders->count($filters);
 
-            return array_map(
-                fn (OrderEntity $order): OrderPayloadDto => $this->toPayload($order),
-                $orders,
-            );
+            return [
+                'orders' => array_map(
+                    fn (OrderEntity $order): OrderPayloadDto => $this->toPayload($order),
+                    $orders,
+                ),
+                'total' => $total,
+            ];
         }
 
         if ($user->getRoleId() === self::HOTEL_ROLE_ID) {
             $hotel = $this->getHotelByUserOrFail($user->getId());
-            $orders = $this->orders->findByHotelId($hotel->getId());
+            $orders = $this->orders->findByHotelId($hotel->getId(), $filters);
+            $total = $this->orders->countByHotelId($hotel->getId(), $filters);
 
-            return array_map(
-                fn (OrderEntity $order): OrderPayloadDto => $this->toPayload($order),
-                $orders,
-            );
+            return [
+                'orders' => array_map(
+                    fn (OrderEntity $order): OrderPayloadDto => $this->toPayload($order),
+                    $orders,
+                ),
+                'total' => $total,
+            ];
         }
 
         throw UnauthorizedDomainException::accessDenied('User role is not allowed for this action.');
@@ -160,7 +174,9 @@ final class OrderService
         $this->assertOrderIsActive($order);
 
         DB::transaction(function () use ($dto, $admin, $order): void {
-            foreach (array_values(array_unique($dto->getOperativeIds())) as $operativeId) {
+            $operativeIds = array_values(array_unique($dto->getOperativeIds()));
+
+            foreach ($operativeIds as $operativeId) {
                 $operative = $this->operatives->findById($operativeId);
 
                 if ($operative === null) {
@@ -170,10 +186,22 @@ final class OrderService
                 if (! $operative->getIsActive()) {
                     throw ConflictException::because(sprintf('Operative [%s] is inactive.', $operativeId));
                 }
+            }
 
-                $existing = $this->orderAssignments->findByOrderAndOperativeId($order->getId(), $operativeId);
+            $existingAssignments = $this->orderAssignments->findByOrderId($order->getId());
+            $existingByOperativeId = [];
+            foreach ($existingAssignments as $assignment) {
+                $existingByOperativeId[$assignment->getOperativeId()] = $assignment;
+            }
 
-                if ($existing !== null) {
+            foreach ($existingAssignments as $assignment) {
+                if (! in_array($assignment->getOperativeId(), $operativeIds, true)) {
+                    $this->orderAssignments->deleteById($assignment->getId());
+                }
+            }
+
+            foreach ($operativeIds as $operativeId) {
+                if (isset($existingByOperativeId[$operativeId])) {
                     continue;
                 }
 

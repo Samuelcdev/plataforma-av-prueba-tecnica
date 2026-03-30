@@ -21,13 +21,13 @@ final class AdminEntity
         ?string $email = null,
         ?string $phone = null,
     ) {
-        $this->id = $this->setId($id);
-        $this->userId = $this->setUserId($userId);
-        $this->documentType = $this->setDocumentType($documentType);
-        $this->document = $this->setDocument($document);
-        $this->name = $this->setName($name);
-        $this->email = $this->setEmail($email);
-        $this->phone = $this->setPhone($phone);
+        $this->setId($id);
+        $this->setUserId($userId);
+        $this->setDocumentType($documentType);
+        $this->setDocument($document);
+        $this->setName($name);
+        $this->setEmail($email);
+        $this->setPhone($phone);
     }
 
     // Getters and Setters

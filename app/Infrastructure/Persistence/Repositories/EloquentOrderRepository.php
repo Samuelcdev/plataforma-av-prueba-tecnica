@@ -16,18 +16,58 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
     {
     }
 
-    public function all(): array
+    public function all(array $filters = []): array
     {
+        $query = Order::query();
+        $this->applyFilters($query, $filters);
+
+        $total = (int) ($filters['total'] ?? 10);
+        $page = (int) ($filters['page'] ?? 1);
+        $total = max(1, min($total, 100));
+        $page = max(1, $page);
+
         return $this->mapper->toCollectionEntity(
-            Order::query()->orderBy('start_date')->get()
+            $query
+                ->orderBy('start_date')
+                ->offset(($page - 1) * $total)
+                ->limit($total)
+                ->get()
         );
     }
 
-    public function findByHotelId(string $hotelId): array
+    public function findByHotelId(string $hotelId, array $filters = []): array
     {
+        $query = Order::query()->where('hotel_id', $hotelId);
+        $this->applyFilters($query, $filters);
+
+        $total = (int) ($filters['total'] ?? 10);
+        $page = (int) ($filters['page'] ?? 1);
+        $total = max(1, min($total, 100));
+        $page = max(1, $page);
+
         return $this->mapper->toCollectionEntity(
-            Order::query()->where('hotel_id', $hotelId)->orderBy('start_date')->get()
+            $query
+                ->orderBy('start_date')
+                ->offset(($page - 1) * $total)
+                ->limit($total)
+                ->get()
         );
+    }
+
+    public function count(array $filters = []): int
+    {
+        $query = Order::query();
+        $this->applyFilters($query, $filters);
+
+        return (int) $query->count();
+    }
+
+    public function countByHotelId(string $hotelId, array $filters = []): int
+    {
+        $query = Order::query()->where('hotel_id', $hotelId);
+        $this->applyFilters($query, $filters);
+
+        return (int) $query->count();
     }
 
     public function findById(string $id): ?OrderEntity
@@ -68,6 +108,21 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
 
         return $order ? (bool) $order->delete() : false;
     }
+
+    private function applyFilters(\Illuminate\Database\Eloquent\Builder $query, array $filters): void
+    {
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search === '') {
+            return;
+        }
+
+        $query->where(function ($builder) use ($search): void {
+            $builder
+                ->where('name', 'like', '%' . $search . '%')
+                ->orWhere('service_type', 'like', '%' . $search . '%');
+        });
+    }
+
     private function toDatabaseDateTime(?DateTimeImmutable $value): ?string
     {
         return $value?->format('Y-m-d H:i:s');
