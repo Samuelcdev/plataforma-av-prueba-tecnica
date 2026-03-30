@@ -36,8 +36,8 @@ export function AuthProvider({ children }) {
     };
 
     const isAuthenticated = !!token;
-    const isAdmin = user?.role_id === 1;
-    const isHotel = user?.role_id === 2;
+    const isAdmin = Number(user?.role_id) === 1;
+    const isHotel = Number(user?.role_id) === 2;
 
     return (
         <AuthContext.Provider value={{ token, user, login, logout, isAuthenticated, isAdmin, isHotel }}>

@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/login';
 import Dashboard from './pages/dashboard';
+import Events from './pages/events';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -32,6 +33,14 @@ const AppRoutes = () => {
                 element={
                     <ProtectedRoute allowedRoles={[1, 2]}>
                         <Dashboard />
+                    </ProtectedRoute>
+                } 
+            />
+            <Route 
+                path="/events" 
+                element={
+                    <ProtectedRoute allowedRoles={[1, 2]}>
+                        <Events />
                     </ProtectedRoute>
                 } 
             />

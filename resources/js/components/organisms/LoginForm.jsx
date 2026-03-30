@@ -19,19 +19,22 @@ export function LoginForm() {
         e.preventDefault();
         setProcessing(true);
         setError(null);
+        console.log('que carajobich');
 
         try {
-            const response = await axios.post('/api/v1/auth/login', {
+            let response = await axios.post('/api/v1/auth/login', {
                 username,
                 password,
                 device_name: 'web'
             });
 
-            if (response.data && response.data.data.token) {
-                login(response.data.data.token, response.data.data.user);
-                console.log('Login successful');
-                navigate('/dashboard');
-            }
+            response = response.data;
+
+            console.log(response);
+            if (!response.success) return;
+
+            login(response.data.token, response.data.user);
+            navigate('/dashboard');
         } catch (err) {
             setError(err.response?.data?.message || 'Error de autenticación. Verifica tus credenciales.');
         } finally {
@@ -68,7 +71,7 @@ export function LoginForm() {
             />
 
             <div className="pt-2">
-                <Button type="submit" disabled={processing}>
+                <Button type="submit" disabled={processing} className='w-full'>
                     Entrar
                     <ArrowRight size={18} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform" />
                 </Button>
