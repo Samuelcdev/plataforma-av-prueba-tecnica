@@ -1,9 +1,14 @@
 import React from 'react';
 import SidebarItem from '../molecules/SidebarItem';
 import Button from '../atoms/Button';
-import { Calendar, Users, FileText, Plus } from 'lucide-react';
+import { Calendar, Users, FileText, Plus, LayoutDashboard } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ activePath }) => {
+  const { isHotel } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <aside className="w-64 bg-white border-r border-gray-100 flex flex-col pt-6 flex-shrink-0 z-20">
       <div className="px-6 mb-10">
@@ -13,10 +18,16 @@ const Sidebar = ({ activePath }) => {
 
       <nav className="flex-1 space-y-2">
         <SidebarItem 
-          icon={Calendar} 
-          label="Eventos" 
+          icon={LayoutDashboard} 
+          label="Dashboard" 
           to="/dashboard" 
           active={activePath === '/dashboard'} 
+        />
+        <SidebarItem 
+          icon={Calendar} 
+          label="Eventos" 
+          to="/events" 
+          active={activePath === '/events'} 
         />
         <SidebarItem 
           icon={Users} 
@@ -32,11 +43,18 @@ const Sidebar = ({ activePath }) => {
         />
       </nav>
 
-      <div className="p-6">
-        <Button variant="primary" className="w-full" icon={Plus}>
-          <span className="text-[14px]">Crear Evento</span>
-        </Button>
-      </div>
+      {isHotel && (
+        <div className="p-6">
+          <Button 
+            variant="primary" 
+            className="w-full" 
+            icon={Plus}
+            onClick={() => navigate('/events', { state: { openForm: true } })}
+          >
+            <span className="text-[14px]">Crear Evento</span>
+          </Button>
+        </div>
+      )}
     </aside>
   );
 };
