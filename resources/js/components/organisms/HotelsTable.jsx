@@ -1,5 +1,6 @@
 import React from 'react';
 import SearchInput from '../molecules/SearchInput';
+import PaginationControls from '../molecules/PaginationControls';
 
 const HotelsTable = ({
   hotels = [],
@@ -8,6 +9,11 @@ const HotelsTable = ({
   onCreateClick,
   searchValue = '',
   onSearchChange,
+  page = 1,
+  total = 0,
+  pageSize = 10,
+  onPrevPage,
+  onNextPage,
 }) => {
   return (
     <div className="card bg-base-100 border border-base-300 shadow-sm">
@@ -72,9 +78,15 @@ const HotelsTable = ({
           </table>
         </div>
 
-        <div className="text-sm text-base-content/70">
-          Mostrando {hotels.length} hoteles
-        </div>
+        <PaginationControls
+          page={page}
+          total={total}
+          pageSize={pageSize}
+          loading={loading}
+          onPrevPage={onPrevPage}
+          onNextPage={onNextPage}
+          itemLabel="hoteles"
+        />
       </div>
     </div>
   );

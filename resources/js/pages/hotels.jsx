@@ -31,6 +31,9 @@ const Hotels = () => {
   const [formErrors, setFormErrors] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearch = useDebouncedValue(searchTerm, 400);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
+  const [totalCount, setTotalCount] = useState(0);
 
   const config = {
     headers: {
@@ -60,14 +63,18 @@ const Hotels = () => {
         ...config,
         params: {
           search: search.trim() !== '' ? search.trim() : undefined,
+          page,
+          total: PAGE_SIZE,
         },
       });
       const data = response.data.data || response.data || [];
       setHotels(Array.isArray(data) ? data.map(normalizeHotel) : []);
+      setTotalCount(Number(response.data.total || 0));
     } catch (err) {
       console.error('Error fetching hotels:', err);
       setError(err.response?.data?.message || 'Error al cargar los hoteles');
       setHotels([]);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
@@ -76,7 +83,7 @@ const Hotels = () => {
   useEffect(() => {
     if (!token) return;
     fetchHotels(debouncedSearch);
-  }, [token, debouncedSearch]);
+  }, [token, debouncedSearch, page]);
 
   const handleRowClick = (hotel) => {
     setSelectedHotel(hotel);
@@ -253,7 +260,15 @@ const Hotels = () => {
       onRowClick={handleRowClick}
       onCreateClick={handleCreateClick}
       searchValue={searchTerm}
-      onSearchChange={(event) => setSearchTerm(event.target.value)}
+      onSearchChange={(event) => {
+        setSearchTerm(event.target.value);
+        setPage(1);
+      }}
+      page={page}
+      total={totalCount}
+      pageSize={PAGE_SIZE}
+      onPrevPage={() => setPage((prev) => Math.max(1, prev - 1))}
+      onNextPage={() => setPage((prev) => prev + 1)}
     >
       <Modal
         isOpen={showDetailModal}

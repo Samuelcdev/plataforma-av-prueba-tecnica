@@ -14,8 +14,9 @@ const PersonalPage = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearch = useDebouncedValue(searchTerm, 400);
-  const page = 1;
-  const total = 10;
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
+  const [totalCount, setTotalCount] = useState(0);
 
   const config = {
     headers: {
@@ -36,17 +37,19 @@ const PersonalPage = () => {
         ...config,
         params: {
           page,
-          total,
+          total: PAGE_SIZE,
           search: search.trim() !== '' ? search.trim() : undefined,
         },
       });
 
       const data = response.data.data || response.data || [];
       setOperatives(Array.isArray(data) ? data.map(normalizeOperative) : []);
+      setTotalCount(Number(response.data.total || 0));
     } catch (err) {
       console.error('Error fetching operatives:', err);
       setError(err.response?.data?.message || 'Error al cargar el personal');
       setOperatives([]);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
@@ -55,7 +58,7 @@ const PersonalPage = () => {
   useEffect(() => {
     if (!token) return;
     fetchOperatives(debouncedSearch);
-  }, [token, debouncedSearch, page, total]);
+  }, [token, debouncedSearch, page]);
 
   const handleRowClick = (operative) => {
     setSelectedOperative(operative);
@@ -69,7 +72,15 @@ const PersonalPage = () => {
       error={error}
       onRowClick={handleRowClick}
       searchValue={searchTerm}
-      onSearchChange={(event) => setSearchTerm(event.target.value)}
+      onSearchChange={(event) => {
+        setSearchTerm(event.target.value);
+        setPage(1);
+      }}
+      page={page}
+      total={totalCount}
+      pageSize={PAGE_SIZE}
+      onPrevPage={() => setPage((prev) => Math.max(1, prev - 1))}
+      onNextPage={() => setPage((prev) => prev + 1)}
     >
       <Modal
         isOpen={showDetailModal}

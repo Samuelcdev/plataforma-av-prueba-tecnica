@@ -35,7 +35,7 @@ final class HotelService
     }
 
     /**
-     * @return list<HotelPayloadDto>
+     * @return array{hotels: list<HotelPayloadDto>, total: int}
      */
     public function index(GetHotelsDto $dto): array
     {
@@ -43,12 +43,17 @@ final class HotelService
 
         $filters = [
             'search' => $dto->getSearch(),
+            'page' => $dto->getPage(),
+            'total' => $dto->getTotal(),
         ];
 
-        return array_map(
-            fn (HotelEntity $hotel): HotelPayloadDto => $this->toPayload($hotel),
-            $this->hotels->all($filters),
-        );
+        return [
+            'hotels' => array_map(
+                fn (HotelEntity $hotel): HotelPayloadDto => $this->toPayload($hotel),
+                $this->hotels->all($filters),
+            ),
+            'total' => $this->hotels->count($filters),
+        ];
     }
 
     public function show(string $id): HotelPayloadDto

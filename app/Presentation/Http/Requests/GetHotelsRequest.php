@@ -22,6 +22,8 @@ final class GetHotelsRequest extends FormRequest
     {
         return [
             'search' => ['nullable', 'string', 'max:150'],
+            'page' => ['nullable', 'integer', 'min:1'],
+            'total' => ['nullable', 'integer', 'min:1', 'max:100'],
         ];
     }
 

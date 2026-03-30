@@ -1,5 +1,6 @@
 import React from 'react';
 import SearchInput from '../molecules/SearchInput';
+import PaginationControls from '../molecules/PaginationControls';
 
 const OperativesTable = ({
   operatives = [],
@@ -7,6 +8,11 @@ const OperativesTable = ({
   onRowClick,
   searchValue = '',
   onSearchChange,
+  page = 1,
+  total = 0,
+  pageSize = 10,
+  onPrevPage,
+  onNextPage,
 }) => {
   return (
     <div className="card border border-base-300 bg-base-100 shadow-sm">
@@ -71,9 +77,15 @@ const OperativesTable = ({
           </table>
         </div>
 
-        <div className="text-sm text-base-content/70">
-          Mostrando {operatives.length} colaboradores
-        </div>
+        <PaginationControls
+          page={page}
+          total={total}
+          pageSize={pageSize}
+          loading={loading}
+          onPrevPage={onPrevPage}
+          onNextPage={onNextPage}
+          itemLabel="colaboradores"
+        />
       </div>
     </div>
   );

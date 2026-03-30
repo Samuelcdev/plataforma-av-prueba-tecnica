@@ -1,5 +1,6 @@
 import React from 'react';
 import SearchInput from '../molecules/SearchInput';
+import PaginationControls from '../molecules/PaginationControls';
 
 const formatDateTime = (value) => {
   if (!value) return '-';
@@ -29,11 +30,6 @@ const EventsTable = ({
   onPrevPage,
   onNextPage,
 }) => {
-  const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
-  const to = total === 0 ? 0 : Math.min(page * pageSize, total);
-  const hasPrev = page > 1;
-  const hasNext = page * pageSize < total;
-
   return (
     <div className="card border border-base-300 bg-base-100 shadow-sm">
       <div className="card-body gap-4 p-4 sm:p-6">
@@ -105,32 +101,15 @@ const EventsTable = ({
           </table>
         </div>
 
-        <div className="flex flex-col gap-3 text-sm text-base-content/70 sm:flex-row sm:items-center sm:justify-between">
-          <span>
-            Mostrando {from}-{to} de {total} eventos
-          </span>
-          <div className="join">
-            <button
-              type="button"
-              className="btn btn-sm join-item"
-              onClick={onPrevPage}
-              disabled={!hasPrev || loading}
-            >
-              Anterior
-            </button>
-            <button type="button" className="btn btn-sm join-item btn-disabled">
-              Página {page}
-            </button>
-            <button
-              type="button"
-              className="btn btn-sm join-item"
-              onClick={onNextPage}
-              disabled={!hasNext || loading}
-            >
-              Siguiente
-            </button>
-          </div>
-        </div>
+        <PaginationControls
+          page={page}
+          total={total}
+          pageSize={pageSize}
+          loading={loading}
+          onPrevPage={onPrevPage}
+          onNextPage={onNextPage}
+          itemLabel="eventos"
+        />
       </div>
     </div>
   );

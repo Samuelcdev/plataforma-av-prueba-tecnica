@@ -1,7 +1,19 @@
 import React from 'react';
 import SearchInput from '../molecules/SearchInput';
+import PaginationControls from '../molecules/PaginationControls';
 
-const ItemsTable = ({ items = [], loading = false, onRowClick, searchValue = '', onSearchChange }) => {
+const ItemsTable = ({
+  items = [],
+  loading = false,
+  onRowClick,
+  searchValue = '',
+  onSearchChange,
+  page = 1,
+  total = 0,
+  pageSize = 10,
+  onPrevPage,
+  onNextPage,
+}) => {
   return (
     <div className="card border border-base-300 bg-base-100 shadow-sm">
       <div className="card-body gap-4 p-4 sm:p-6">
@@ -65,9 +77,15 @@ const ItemsTable = ({ items = [], loading = false, onRowClick, searchValue = '',
           </table>
         </div>
 
-        <div className="text-sm text-base-content/70">
-          Mostrando {items.length} items
-        </div>
+        <PaginationControls
+          page={page}
+          total={total}
+          pageSize={pageSize}
+          loading={loading}
+          onPrevPage={onPrevPage}
+          onNextPage={onNextPage}
+          itemLabel="items"
+        />
       </div>
     </div>
   );

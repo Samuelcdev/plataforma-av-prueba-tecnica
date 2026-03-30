@@ -10,6 +10,11 @@ const PersonalTemplate = ({
   onRowClick,
   searchValue,
   onSearchChange,
+  page,
+  total,
+  pageSize,
+  onPrevPage,
+  onNextPage,
   children,
 }) => {
   return (
@@ -34,6 +39,11 @@ const PersonalTemplate = ({
           onRowClick={onRowClick}
           searchValue={searchValue}
           onSearchChange={onSearchChange}
+          page={page}
+          total={total}
+          pageSize={pageSize}
+          onPrevPage={onPrevPage}
+          onNextPage={onNextPage}
         />
       </div>
 

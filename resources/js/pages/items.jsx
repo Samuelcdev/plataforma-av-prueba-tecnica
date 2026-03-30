@@ -14,8 +14,9 @@ const Items = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearch = useDebouncedValue(searchTerm, 400);
-  const page = 1;
-  const total = 10;
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
+  const [totalCount, setTotalCount] = useState(0);
 
   const config = {
     headers: {
@@ -44,16 +45,18 @@ const Items = () => {
         ...config,
         params: {
           page,
-          total,
+          total: PAGE_SIZE,
           search: search.trim() !== '' ? search.trim() : undefined,
         },
       });
       const data = response.data.data || response.data || [];
       setItems(Array.isArray(data) ? data.map(normalizeItem) : []);
+      setTotalCount(Number(response.data.total || 0));
     } catch (err) {
       console.error('Error fetching items:', err);
       setError(err.response?.data?.message || 'Error al cargar los items');
       setItems([]);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
@@ -62,7 +65,7 @@ const Items = () => {
   useEffect(() => {
     if (!token) return;
     fetchItems(debouncedSearch);
-  }, [token, debouncedSearch, page, total]);
+  }, [token, debouncedSearch, page]);
 
   const handleRowClick = (item) => {
     setSelectedItem(item);
@@ -76,7 +79,15 @@ const Items = () => {
       error={error}
       onRowClick={handleRowClick}
       searchValue={searchTerm}
-      onSearchChange={(event) => setSearchTerm(event.target.value)}
+      onSearchChange={(event) => {
+        setSearchTerm(event.target.value);
+        setPage(1);
+      }}
+      page={page}
+      total={totalCount}
+      pageSize={PAGE_SIZE}
+      onPrevPage={() => setPage((prev) => Math.max(1, prev - 1))}
+      onNextPage={() => setPage((prev) => prev + 1)}
     >
       <Modal
         isOpen={showDetailModal}

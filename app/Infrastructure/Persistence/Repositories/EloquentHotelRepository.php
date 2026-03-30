@@ -21,9 +21,26 @@ final class EloquentHotelRepository implements HotelRepositoryInterface
         $query = Hotel::query();
         $this->applyFilters($query, $filters);
 
+        $total = (int) ($filters['total'] ?? 10);
+        $page = (int) ($filters['page'] ?? 1);
+        $total = max(1, min($total, 100));
+        $page = max(1, $page);
+
         return $this->mapper->toCollectionEntity(
-            $query->orderBy('name')->get()
+            $query
+                ->orderBy('name')
+                ->offset(($page - 1) * $total)
+                ->limit($total)
+                ->get()
         );
+    }
+
+    public function count(array $filters = []): int
+    {
+        $query = Hotel::query();
+        $this->applyFilters($query, $filters);
+
+        return (int) $query->count();
     }
 
     public function findById(string $id): ?HotelEntity

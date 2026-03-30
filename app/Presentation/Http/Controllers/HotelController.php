@@ -27,15 +27,18 @@ final class HotelController extends Controller
 
         $dto = new GetHotelsDto(
             search: isset($payload['search']) ? trim((string) $payload['search']) : null,
+            page: isset($payload['page']) ? (int) $payload['page'] : 1,
+            total: isset($payload['total']) ? (int) $payload['total'] : 10,
         );
 
-        $hotels = $this->hotelService->index($dto);
+        $result = $this->hotelService->index($dto);
 
         return ApiResponse::success(
             data: array_map(
                 static fn ($hotel): array => HotelResource::toArray($hotel),
-                $hotels,
+                $result['hotels'],
             ),
+            total: $result['total'],
             message: 'Hotels retrieved',
             status: 200,
         );
