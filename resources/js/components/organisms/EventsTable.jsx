@@ -37,7 +37,7 @@ const EventsTable = ({ orders, hotels = [] }) => {
           {orders.map((order) => (
             <tr key={order.id} className="hover:bg-gray-50/50 transition-colors group">
               <td className="px-6 py-4 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[#FFF6E0] text-[#E5A500] flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-[#FFF6E0] text-[#E5A500] flex items-center justify-center shrink-0">
                   <Video size={18} />
                 </div>
                 <div>

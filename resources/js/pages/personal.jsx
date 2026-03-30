@@ -101,7 +101,7 @@ export default function PersonalPage() {
           
           {/* Event Details Card */}
           <div className="bg-white rounded-[32px] p-7 shadow-[0_2px_15px_-4px_rgba(0,0,0,0.05)] border border-white">
-            <div className="w-full h-[180px] bg-gradient-to-br from-[#003B73] to-[#00172D] rounded-2xl relative overflow-hidden mb-6 shadow-md flex items-center justify-center">
+            <div className="w-full h-[180px] bg-linear-to-br from-[#003B73] to-[#00172D] rounded-2xl relative overflow-hidden mb-6 shadow-md flex items-center justify-center">
               {/* Event Image Placeholder / Tech Elements */}
               <div className="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=')]"></div>
               
@@ -228,7 +228,7 @@ export default function PersonalPage() {
                     </div>
                   ) : (
                     <div className={`w-[52px] h-[52px] rounded-full shrink-0 shadow-sm flex items-center justify-center text-white/50 text-[10px] overflow-hidden ${staff.imgColor}`}>
-                      <div className="w-full h-full bg-gradient-to-tr from-black/40 to-transparent"></div>
+                      <div className="w-full h-full bg-linear-to-tr from-black/40 to-transparent"></div>
                     </div>
                   )}
                   
@@ -236,7 +236,7 @@ export default function PersonalPage() {
                     <h4 className={`text-[16px] font-extrabold leading-tight mb-1 tracking-tight ${staff.locked ? 'text-gray-500' : 'text-[#1A1A1A]'}`}>
                       {staff.name}
                     </h4>
-                    <p className={`text-[10px] font-bold uppercase tracking-[0.1em] leading-snug whitespace-pre-wrap ${staff.locked ? 'text-gray-400' : 'text-[#A67822]'}`}>
+                    <p className={`text-[10px] font-bold uppercase tracking-widest leading-snug whitespace-pre-wrap ${staff.locked ? 'text-gray-400' : 'text-[#A67822]'}`}>
                       {staff.role}
                     </p>
                   </div>

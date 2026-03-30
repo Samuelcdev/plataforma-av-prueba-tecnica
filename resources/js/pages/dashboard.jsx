@@ -105,7 +105,7 @@ const DashboardPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 pb-8">
           <div className="relative rounded-[24px] overflow-hidden group min-h-[220px]">
               <img src="/stadium.png" alt="Innovation Summit 2024" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0A1116]/90 via-[#0D161C]/50 to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-[#0A1116]/90 via-[#0D161C]/50 to-transparent"></div>
               
               <div className="absolute inset-x-0 bottom-0 p-8 flex flex-col items-start justify-end h-full">
                   <span className="bg-[#B47C1C]/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-sm mb-3">
