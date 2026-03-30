@@ -57,7 +57,7 @@ test('hotel can execute orders crud flow', function (): void {
         ->assertJsonPath('success', true)
         ->assertJsonPath('message', 'Order created')
         ->assertJsonPath('data.name', 'Evento QA 1')
-        ->assertJsonPath('data.status', 'active');
+        ->assertJsonPath('data.status', 'pending');
 
     $orderId = (string) $createResponse->json('data.id');
 

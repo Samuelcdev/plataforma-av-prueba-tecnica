@@ -122,7 +122,7 @@ const Events = () => {
         params: {
           page: 1,
           total: 100,
-          is_active: true,
+          is_active: 1,
         },
       });
 

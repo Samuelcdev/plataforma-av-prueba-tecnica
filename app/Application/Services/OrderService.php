@@ -136,7 +136,7 @@ final class OrderService
                 serviceType: $dto->getServiceType(),
                 startDate: $dto->getStartDate(),
                 endDate: $dto->getEndDate(),
-                status: self::STATUS_ACTIVE,
+                status: self::STATUS_PENDING,
             );
 
             $savedOrder = $this->orders->save($order);
@@ -221,6 +221,11 @@ final class OrderService
 
                 $this->orderAssignments->save($assignment);
             }
+
+            $order->setStatus(self::STATUS_ACTIVE)
+                ->setUpdatedAt(new DateTimeImmutable());
+
+            $this->orders->save($order);
         });
 
         $updatedOrder = $this->getOrderOrFail($order->getId());
