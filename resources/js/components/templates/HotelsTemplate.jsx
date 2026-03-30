@@ -9,6 +9,8 @@ const HotelsTemplate = ({
   error,
   onRowClick,
   onCreateClick,
+  searchValue,
+  onSearchChange,
   children,
 }) => {
   return (
@@ -32,6 +34,8 @@ const HotelsTemplate = ({
           loading={loading}
           onRowClick={onRowClick}
           onCreateClick={onCreateClick}
+          searchValue={searchValue}
+          onSearchChange={onSearchChange}
         />
       </div>
 

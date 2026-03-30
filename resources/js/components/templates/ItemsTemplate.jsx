@@ -3,7 +3,7 @@ import Typography from '../atoms/Typography';
 import ItemsTable from '../organisms/ItemsTable';
 import DashboardTemplate from './DashboardTemplate';
 
-const ItemsTemplate = ({ items, loading, error, onRowClick, children }) => {
+const ItemsTemplate = ({ items, loading, error, onRowClick, searchValue, onSearchChange, children }) => {
   return (
     <DashboardTemplate activePath="/items">
       <div>
@@ -20,7 +20,13 @@ const ItemsTemplate = ({ items, loading, error, onRowClick, children }) => {
           </div>
         ) : null}
 
-        <ItemsTable items={items} loading={loading} onRowClick={onRowClick} />
+        <ItemsTable
+          items={items}
+          loading={loading}
+          onRowClick={onRowClick}
+          searchValue={searchValue}
+          onSearchChange={onSearchChange}
+        />
       </div>
 
       {children}

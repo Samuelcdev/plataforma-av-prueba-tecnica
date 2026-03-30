@@ -1,27 +1,14 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import SearchInput from '../molecules/SearchInput';
 
-const ItemsTable = ({ items = [], loading = false, onRowClick }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const filteredItems = useMemo(() => {
-    if (!searchTerm.trim()) return items;
-
-    const term = searchTerm.toLowerCase();
-    return items.filter(
-      (item) =>
-        (item.name || '').toLowerCase().includes(term) ||
-        (item.description || '').toLowerCase().includes(term),
-    );
-  }, [items, searchTerm]);
-
+const ItemsTable = ({ items = [], loading = false, onRowClick, searchValue = '', onSearchChange }) => {
   return (
     <div className="card border border-base-300 bg-base-100 shadow-sm">
       <div className="card-body gap-4 p-4 sm:p-6">
         <div className="space-y-2">
           <SearchInput
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
+            value={searchValue}
+            onChange={onSearchChange}
             placeholder="Buscar por nombre o descripción..."
             className="w-full max-w-xl"
             inputClassName="input input-bordered bg-base-100 focus:bg-base-100"
@@ -46,14 +33,14 @@ const ItemsTable = ({ items = [], loading = false, onRowClick }) => {
                     <span className="loading loading-spinner loading-md" />
                   </td>
                 </tr>
-              ) : filteredItems.length === 0 ? (
+              ) : items.length === 0 ? (
                 <tr>
                   <td colSpan="4" className="py-8 text-center text-base-content/70">
                     No hay items disponibles
                   </td>
                 </tr>
               ) : (
-                filteredItems.map((item) => (
+                items.map((item) => (
                   <tr
                     key={item.id}
                     className="cursor-pointer"
@@ -79,7 +66,7 @@ const ItemsTable = ({ items = [], loading = false, onRowClick }) => {
         </div>
 
         <div className="text-sm text-base-content/70">
-          Mostrando {filteredItems.length} de {items.length} items
+          Mostrando {items.length} items
         </div>
       </div>
     </div>

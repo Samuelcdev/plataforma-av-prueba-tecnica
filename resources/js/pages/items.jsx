@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import ItemsTemplate from '../components/templates/ItemsTemplate';
 import Modal from '../components/atoms/Modal';
+import useDebouncedValue from '../hooks/useDebouncedValue';
 
 const Items = () => {
   const { token } = useAuth();
@@ -11,6 +12,10 @@ const Items = () => {
   const [error, setError] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearch = useDebouncedValue(searchTerm, 400);
+  const page = 1;
+  const total = 10;
 
   const config = {
     headers: {
@@ -31,11 +36,18 @@ const Items = () => {
         : null,
   });
 
-  const fetchItems = async () => {
+  const fetchItems = async (search = '') => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get('/api/v1/items', config);
+      const response = await axios.get('/api/v1/items', {
+        ...config,
+        params: {
+          page,
+          total,
+          search: search.trim() !== '' ? search.trim() : undefined,
+        },
+      });
       const data = response.data.data || response.data || [];
       setItems(Array.isArray(data) ? data.map(normalizeItem) : []);
     } catch (err) {
@@ -49,8 +61,8 @@ const Items = () => {
 
   useEffect(() => {
     if (!token) return;
-    fetchItems();
-  }, [token]);
+    fetchItems(debouncedSearch);
+  }, [token, debouncedSearch, page, total]);
 
   const handleRowClick = (item) => {
     setSelectedItem(item);
@@ -63,6 +75,8 @@ const Items = () => {
       loading={loading}
       error={error}
       onRowClick={handleRowClick}
+      searchValue={searchTerm}
+      onSearchChange={(event) => setSearchTerm(event.target.value)}
     >
       <Modal
         isOpen={showDetailModal}

@@ -7,7 +7,7 @@ const SidebarItem = ({ icon, label, to, active }) => {
     <Link to={to} className="block w-full">
       <Button 
         variant={active ? 'active' : 'ghost'} 
-        className="w-full justify-start rounded-none cursor-pointer hover:text-primary"
+        className="w-full justify-start !rounded-none cursor-pointer hover:text-primary"
         icon={icon}
       >
         <span className="text-[14px]">{label}</span>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Services;
 
 use App\Application\DTO\Hotel\CreateHotelDto;
+use App\Application\DTO\Hotel\GetHotelsDto;
 use App\Application\DTO\Hotel\HotelPayloadDto;
 use App\Application\DTO\Hotel\UpdateHotelDto;
 use App\Application\Security\PasswordHasherInterface;
@@ -36,13 +37,17 @@ final class HotelService
     /**
      * @return list<HotelPayloadDto>
      */
-    public function index(): array
+    public function index(GetHotelsDto $dto): array
     {
         $this->assertAuthenticatedAdmin();
 
+        $filters = [
+            'search' => $dto->getSearch(),
+        ];
+
         return array_map(
             fn (HotelEntity $hotel): HotelPayloadDto => $this->toPayload($hotel),
-            $this->hotels->all(),
+            $this->hotels->all($filters),
         );
     }
 

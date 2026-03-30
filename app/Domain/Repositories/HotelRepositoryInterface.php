@@ -11,7 +11,7 @@ interface HotelRepositoryInterface
     /**
      * @return list<HotelEntity>
      */
-    public function all(): array;
+    public function all(array $filters = []): array;
 
     public function findById(string $id): ?HotelEntity;
 

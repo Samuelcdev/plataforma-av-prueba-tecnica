@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import HotelsTemplate from '../components/templates/HotelsTemplate';
 import Modal from '../components/atoms/Modal';
 import HotelForm from '../components/organisms/HotelForm';
+import useDebouncedValue from '../hooks/useDebouncedValue';
 
 const EMPTY_FORM = {
   username: '',
@@ -27,6 +28,8 @@ const Hotels = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [formErrors, setFormErrors] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearch = useDebouncedValue(searchTerm, 400);
 
   const config = {
     headers: {
@@ -48,11 +51,16 @@ const Hotels = () => {
     address: hotel?.address || '',
   });
 
-  const fetchHotels = async () => {
+  const fetchHotels = async (search = '') => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get('/api/v1/hotels', config);
+      const response = await axios.get('/api/v1/hotels', {
+        ...config,
+        params: {
+          search: search.trim() !== '' ? search.trim() : undefined,
+        },
+      });
       const data = response.data.data || response.data || [];
       setHotels(Array.isArray(data) ? data.map(normalizeHotel) : []);
     } catch (err) {
@@ -65,8 +73,9 @@ const Hotels = () => {
   };
 
   useEffect(() => {
-    fetchHotels();
-  }, [token]);
+    if (!token) return;
+    fetchHotels(debouncedSearch);
+  }, [token, debouncedSearch]);
 
   const handleRowClick = (hotel) => {
     setSelectedHotel(hotel);
@@ -196,6 +205,8 @@ const Hotels = () => {
       error={error}
       onRowClick={handleRowClick}
       onCreateClick={handleCreateClick}
+      searchValue={searchTerm}
+      onSearchChange={(event) => setSearchTerm(event.target.value)}
     >
       <Modal
         isOpen={showDetailModal}

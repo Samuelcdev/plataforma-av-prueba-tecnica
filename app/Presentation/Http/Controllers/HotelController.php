@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Presentation\Http\Controllers;
 
 use App\Application\DTO\Hotel\CreateHotelDto;
+use App\Application\DTO\Hotel\GetHotelsDto;
 use App\Application\DTO\Hotel\UpdateHotelDto;
 use App\Application\Services\HotelService;
+use App\Presentation\Http\Requests\GetHotelsRequest;
 use App\Presentation\Http\Requests\StoreHotelRequest;
 use App\Presentation\Http\Requests\UpdateHotelRequest;
 use App\Presentation\Http\Resources\HotelResource;
@@ -19,9 +21,15 @@ final class HotelController extends Controller
     {
     }
 
-    public function index(): JsonResponse
+    public function index(GetHotelsRequest $request): JsonResponse
     {
-        $hotels = $this->hotelService->index();
+        $payload = $request->validated();
+
+        $dto = new GetHotelsDto(
+            search: isset($payload['search']) ? trim((string) $payload['search']) : null,
+        );
+
+        $hotels = $this->hotelService->index($dto);
 
         return ApiResponse::success(
             data: array_map(

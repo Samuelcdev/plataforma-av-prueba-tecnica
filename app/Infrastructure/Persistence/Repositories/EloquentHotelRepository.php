@@ -16,10 +16,13 @@ final class EloquentHotelRepository implements HotelRepositoryInterface
     {
     }
 
-    public function all(): array
+    public function all(array $filters = []): array
     {
+        $query = Hotel::query();
+        $this->applyFilters($query, $filters);
+
         return $this->mapper->toCollectionEntity(
-            Hotel::query()->orderBy('name')->get()
+            $query->orderBy('name')->get()
         );
     }
 
@@ -79,6 +82,22 @@ final class EloquentHotelRepository implements HotelRepositoryInterface
 
         return $hotel ? (bool) $hotel->delete() : false;
     }
+
+    private function applyFilters(\Illuminate\Database\Eloquent\Builder $query, array $filters): void
+    {
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search === '') {
+            return;
+        }
+
+        $query->where(function ($builder) use ($search): void {
+            $builder
+                ->where('name', 'like', '%' . $search . '%')
+                ->orWhere('nit', 'like', '%' . $search . '%')
+                ->orWhere('address', 'like', '%' . $search . '%');
+        });
+    }
+
     private function toDatabaseDateTime(?DateTimeImmutable $value): ?string
     {
         return $value?->format('Y-m-d H:i:s');
