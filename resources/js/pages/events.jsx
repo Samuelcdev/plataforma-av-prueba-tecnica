@@ -230,6 +230,7 @@ const Events = () => {
     const cleanedItems = createForm.items
       .map((item) => ({
         item_id: item.item_id,
+        name: item.name,
         quantity: Number(item.quantity),
       }))
       .filter((item) => item.item_id && item.quantity > 0);
@@ -465,7 +466,7 @@ const Events = () => {
                 <ul className="mt-2 space-y-1">
                   {selectedOrder.items.map((item) => (
                     <li key={item.id} className="flex items-center justify-between rounded border border-base-300 px-3 py-2">
-                      <span className="text-xs text-base-content/70">{item.item_id}</span>
+                      <span className="text-xs text-base-content/70">{item.name}</span>
                       <span className="badge badge-outline">x{item.quantity}</span>
                     </li>
                   ))}

@@ -29,8 +29,8 @@ final class OrderResource
             'updated_at' => $order->getUpdatedAt()?->format(DATE_ATOM),
             'items' => array_map(
                 static fn (OrderItemEntity $item): array => [
-                    'id' => $item->getId(),
-                    'item_id' => $item->getItemId(),
+                    'id' => $item->getItemId(),
+                    'name' => $item->getItemName(),
                     'quantity' => $item->getQuantity(),
                 ],
                 $payload->getItems(),

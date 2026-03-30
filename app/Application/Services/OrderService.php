@@ -375,7 +375,14 @@ final class OrderService
 
     private function toPayload(OrderEntity $order): OrderPayloadDto
     {
-        $items = $this->orderItems->findByOrderId($order->getId());
+        $items = array_map(function (OrderItemEntity $orderItem): OrderItemEntity {
+            $item = $this->items->findById($orderItem->getItemId());
+            if ($item !== null) {
+                $orderItem->setItemName($item->getName());
+            }
+
+            return $orderItem;
+        }, $this->orderItems->findByOrderId($order->getId()));
         $assignments = $this->orderAssignments->findByOrderId($order->getId());
 
         return new OrderPayloadDto($order, $items, $assignments);

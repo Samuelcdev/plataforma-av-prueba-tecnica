@@ -3,6 +3,7 @@ import { Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import DashboardTemplate from '../components/templates/DashboardTemplate';
 import Typography from '../components/atoms/Typography';
+import EventDetailModal from '../components/organisms/EventDetailModal';
 import { useAuth } from '../contexts/AuthContext';
 
 const UPCOMING_LIMIT = 3;
@@ -53,7 +54,7 @@ const KpiCard = ({ title, value, tone = 'primary' }) => {
   );
 };
 
-const UpcomingCards = ({ events, loading, isAdmin }) => {
+const UpcomingCards = ({ events, loading, isAdmin, onViewEvent }) => {
   if (loading) {
     return (
       <div className="card bg-base-100 border border-base-300 shadow-sm">
@@ -104,9 +105,13 @@ const UpcomingCards = ({ events, loading, isAdmin }) => {
               ) : null}
             </div>
             <div className="card-actions justify-end">
-              <Link className="btn btn-ghost btn-sm" to="/events">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => onViewEvent(event.id)}
+              >
                 Ver evento
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -120,6 +125,10 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [showEventDetailModal, setShowEventDetailModal] = useState(false);
+  const [loadingEventDetail, setLoadingEventDetail] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedHotel, setSelectedHotel] = useState(null);
   const [kpis, setKpis] = useState({
     totalEvents: 0,
     pendingEvents: 0,
@@ -220,6 +229,37 @@ const DashboardPage = () => {
     }
   };
 
+  const handleViewEvent = async (eventId) => {
+    setShowEventDetailModal(true);
+    setLoadingEventDetail(true);
+    setSelectedEvent(null);
+    setSelectedHotel(null);
+
+    try {
+      const orderResponse = await axios.get(`/api/v1/orders/${eventId}`, config);
+      const order = orderResponse.data?.data || null;
+      setSelectedEvent(order);
+
+      if (order?.hotel_id) {
+        try {
+          const hotelResponse = await axios.get(`/api/v1/hotels/${order.hotel_id}`, config);
+          setSelectedHotel(hotelResponse.data?.data || null);
+        } catch (hotelError) {
+          console.error('Error fetching hotel detail:', hotelError);
+          setSelectedHotel(null);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching order detail:', err);
+      if (err.response?.status === 401) {
+        logout();
+      }
+      setError(err.response?.data?.message || 'No fue posible cargar el detalle del evento');
+    } finally {
+      setLoadingEventDetail(false);
+    }
+  };
+
   useEffect(() => {
     if (!isAuthenticated || !token) return;
     fetchDashboardData();
@@ -264,8 +304,26 @@ const DashboardPage = () => {
 
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-base-content">Próximos eventos</h3>
-        <UpcomingCards events={upcomingEvents} loading={loading} isAdmin={isAdmin} />
+        <UpcomingCards
+          events={upcomingEvents}
+          loading={loading}
+          isAdmin={isAdmin}
+          onViewEvent={handleViewEvent}
+        />
       </div>
+
+      <EventDetailModal
+        isOpen={showEventDetailModal}
+        onClose={() => {
+          setShowEventDetailModal(false);
+          setSelectedEvent(null);
+          setSelectedHotel(null);
+        }}
+        loading={loadingEventDetail}
+        event={selectedEvent}
+        hotel={selectedHotel}
+        isAdmin={isAdmin}
+      />
     </DashboardTemplate>
   );
 };

@@ -12,12 +12,15 @@ final class OrderItemEntity
 
     private int $quantity;
 
-    public function __construct(string $id, string $orderId, string $itemId, int $quantity = 1)
+    private ?string $itemName;
+
+    public function __construct(string $id, string $orderId, string $itemId, int $quantity = 1, ?string $itemName = null)
     {
         $this->id = $id;
         $this->orderId = $orderId;
         $this->itemId = $itemId;
         $this->quantity = $quantity;
+        $this->itemName = $itemName;
     }
 
     public function getId(): string
@@ -64,6 +67,18 @@ final class OrderItemEntity
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getItemName(): ?string
+    {
+        return $this->itemName;
+    }
+
+    public function setItemName(?string $itemName): self
+    {
+        $this->itemName = $itemName;
 
         return $this;
     }
