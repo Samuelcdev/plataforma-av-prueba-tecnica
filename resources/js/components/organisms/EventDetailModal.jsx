@@ -14,7 +14,7 @@ const formatDateTime = (value) => {
   });
 };
 
-const EventDetailModal = ({ isOpen, onClose, loading, event, hotel, isAdmin }) => (
+const EventDetailModal = ({ isOpen, onClose, loading, event, hotel }) => (
   <Modal
     isOpen={isOpen}
     onClose={onClose}
@@ -84,7 +84,7 @@ const EventDetailModal = ({ isOpen, onClose, loading, event, hotel, isAdmin }) =
           )}
         </div>
 
-        {isAdmin && Array.isArray(event.assignments) && event.assignments.length > 0 ? (
+        {Array.isArray(event.assignments) && event.assignments.length > 0 ? (
           <div>
             <p className="text-base-content/60">Personal operativo asignado</p>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -93,7 +93,7 @@ const EventDetailModal = ({ isOpen, onClose, loading, event, hotel, isAdmin }) =
                   key={assignment.id}
                   className="badge badge-outline badge-info"
                 >
-                  {assignment.operative_name || assignment.operative_id}
+                  {assignment.operative_name || assignment.name || assignment.operative_id}
                 </span>
               ))}
             </div>

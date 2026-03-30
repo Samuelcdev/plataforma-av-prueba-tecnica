@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from '../organisms/Sidebar';
 import Topbar from '../organisms/Topbar';
+import { useAuth } from '../../contexts/AuthContext';
 
 const DashboardTemplate = ({ 
   user, 
@@ -10,12 +11,16 @@ const DashboardTemplate = ({
   children,
   headerActions
 }) => {
+  const { user: authUser, logout: authLogout } = useAuth();
+  const currentUser = user ?? authUser;
+  const currentLogout = onLogout ?? authLogout;
+
   return (
     <div className="flex h-screen bg-[#FDFBF7] font-sans overflow-hidden">
       <Sidebar activePath={activePath} />
 
       <main className="flex-1 flex flex-col h-screen overflow-hidden relative z-10">
-        <Topbar user={user} onLogout={onLogout} onSearch={onSearch} />
+        <Topbar user={currentUser} onLogout={currentLogout} onSearch={onSearch} />
 
         <div className="flex-1 overflow-auto bg-[#FDFBF7] p-8 scroller">
           <div className="max-w-[1280px] mx-auto w-full space-y-8">

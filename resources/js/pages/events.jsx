@@ -500,13 +500,21 @@ const Events = () => {
 
             <div>
               <p className="text-base-content/60">Personal operativo asignado</p>
-              {selectedOperativeIds.length > 0 ? (
+              {(isAdmin ? selectedOperativeIds.length > 0 : selectedOrder.assignments?.length > 0) ? (
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {selectedOperativeIds.map((operativeId) => (
-                    <span key={operativeId} className="badge badge-outline badge-info">
-                      {operativeMap.get(operativeId) || operativeId.slice(0, 8)}
-                    </span>
-                  ))}
+                  {isAdmin
+                    ? selectedOperativeIds.map((operativeId) => (
+                        <span key={operativeId} className="badge badge-outline badge-info">
+                          {operativeMap.get(operativeId)
+                            || selectedOrder.assignments?.find((assignment) => assignment.operative_id === operativeId)?.operative_name
+                            || operativeId}
+                        </span>
+                      ))
+                    : selectedOrder.assignments.map((assignment) => (
+                        <span key={assignment.id} className="badge badge-outline badge-info">
+                          {assignment.operative_name || assignment.name || assignment.operative_id}
+                        </span>
+                      ))}
                 </div>
               ) : (
                 <p className="font-medium">Sin personal asignado.</p>
