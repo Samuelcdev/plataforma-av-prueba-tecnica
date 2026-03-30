@@ -285,7 +285,7 @@ final class OrderService
 
                 if ($this->rangesOverlap($orderStart, $orderEnd, $start, $end)) {
                     throw new DomainException(
-                        sprintf('Operative [%s] is already assigned to another event in the requested time window.', $operativeId),
+                        sprintf('El operativo [%s] ya esta asignado para otro evento en esa misma fecha.', $operativeId),
                         ['operative_id' => $operativeId, 'conflict_order_id' => $assignment['order_id']],
                         'operative.occupied'
                     );

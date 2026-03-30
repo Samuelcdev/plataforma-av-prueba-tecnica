@@ -319,7 +319,15 @@ const Events = () => {
       });
     } catch (err) {
       console.error('Error assigning operatives:', err);
-      setError(err.response?.data?.message || 'No fue posible actualizar la asignación');
+      await Swal.fire({
+        title: 'Error',
+        text: 'No fue posible asignar los operativos: ' + err.response?.data?.message,
+        icon: 'error',
+        confirmButtonText: 'Continuar',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        ...swalTheme,
+      });
     } finally {
       setSavingOperatives(false);
     }
