@@ -384,6 +384,12 @@ final class OrderService
             return $orderItem;
         }, $this->orderItems->findByOrderId($order->getId()));
         $assignments = $this->orderAssignments->findByOrderId($order->getId());
+        foreach ($assignments as $assignment) {
+            $operative = $this->operatives->findById($assignment->getOperativeId());
+            if ($operative !== null) {
+                $assignment->setOperativeName($operative->getName());
+            }
+        }
 
         return new OrderPayloadDto($order, $items, $assignments);
     }

@@ -84,10 +84,19 @@ const EventDetailModal = ({ isOpen, onClose, loading, event, hotel, isAdmin }) =
           )}
         </div>
 
-        {isAdmin ? (
+        {isAdmin && Array.isArray(event.assignments) && event.assignments.length > 0 ? (
           <div>
             <p className="text-base-content/60">Personal operativo asignado</p>
-            <p className="font-medium">{Array.isArray(event.assignments) ? event.assignments.length : 0}</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {event.assignments.map((assignment) => (
+                <span
+                  key={assignment.id}
+                  className="badge badge-outline badge-info"
+                >
+                  {assignment.operative_name || assignment.operative_id}
+                </span>
+              ))}
+            </div>
           </div>
         ) : null}
       </div>

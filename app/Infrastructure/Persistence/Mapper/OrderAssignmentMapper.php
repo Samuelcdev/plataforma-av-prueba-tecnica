@@ -20,6 +20,7 @@ final class OrderAssignmentMapper
             (string) $orderAssignment->operative_id,
             (string) $orderAssignment->admin_id,
             $this->toImmutable($orderAssignment->assigned_at),
+            null,
         );
     }
 

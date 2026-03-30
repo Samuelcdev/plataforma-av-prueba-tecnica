@@ -15,6 +15,7 @@ final class OrderAssignmentEntity
     private string $adminId;
 
     private ?DateTimeImmutable $assignedAt;
+    private ?string $operativeName;
 
     public function __construct(
         string $id,
@@ -22,12 +23,14 @@ final class OrderAssignmentEntity
         string $operativeId,
         string $adminId,
         ?DateTimeImmutable $assignedAt = null,
+        ?string $operativeName = null,
     ) {
         $this->id = $id;
         $this->orderId = $orderId;
         $this->operativeId = $operativeId;
         $this->adminId = $adminId;
         $this->assignedAt = $assignedAt;
+        $this->operativeName = $operativeName;
     }
 
     public function getId(): string
@@ -86,6 +89,18 @@ final class OrderAssignmentEntity
     public function setAssignedAt(?DateTimeImmutable $assignedAt): self
     {
         $this->assignedAt = $assignedAt;
+
+        return $this;
+    }
+
+    public function getOperativeName(): ?string
+    {
+        return $this->operativeName;
+    }
+
+    public function setOperativeName(?string $operativeName): self
+    {
+        $this->operativeName = $operativeName;
 
         return $this;
     }

@@ -39,6 +39,7 @@ final class OrderResource
                 static fn (OrderAssignmentEntity $assignment): array => [
                     'id' => $assignment->getId(),
                     'operative_id' => $assignment->getOperativeId(),
+                    'operative_name' => $assignment->getOperativeName(),
                     'admin_id' => $assignment->getAdminId(),
                     'assigned_at' => $assignment->getAssignedAt()?->format(DATE_ATOM),
                 ],
