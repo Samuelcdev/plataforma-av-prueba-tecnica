@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Database\Seeders\DatabaseSeeder;
+use App\Infrastructure\Persistence\Models\User;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 beforeEach(function (): void {
@@ -103,17 +105,18 @@ test('store order validates payload', function (): void {
 });
 
 test('admin cannot assign operative if it overlaps with another event', function (): void {
-    $hotelToken = loginForOrders($this, 'hotel.andes', 'Hotel123!', 'test-orders-overlap-hotel');
-    $adminToken = loginForOrders($this, 'admin.super', 'Admin123!', 'test-orders-overlap-admin');
+    $hotelUser = User::query()->where('username', 'hotel.andes')->firstOrFail();
+    $adminUser = User::query()->where('username', 'admin.super')->firstOrFail();
 
-    $firstOrderResponse = $this->withToken($hotelToken)->postJson(
+    Sanctum::actingAs($hotelUser);
+    $firstOrderResponse = $this->postJson(
         '/api/v1/orders',
         orderPayload('Evento Asignacion A', '2026-04-22 08:00:00', '2026-04-22 12:00:00'),
     );
     $firstOrderResponse->assertCreated();
     $firstOrderId = (string) $firstOrderResponse->json('data.id');
 
-    $secondOrderResponse = $this->withToken($hotelToken)->postJson(
+    $secondOrderResponse = $this->postJson(
         '/api/v1/orders',
         orderPayload('Evento Asignacion B', '2026-04-22 10:00:00', '2026-04-22 13:00:00'),
     );
@@ -122,7 +125,8 @@ test('admin cannot assign operative if it overlaps with another event', function
 
     $operativeId = '50000000-0000-0000-0000-000000000001';
 
-    $assignFirstResponse = $this->withToken($adminToken)->postJson(
+    Sanctum::actingAs($adminUser);
+    $assignFirstResponse = $this->postJson(
         "/api/v1/orders/{$firstOrderId}/assign-operatives",
         ['operative_ids' => [$operativeId]],
     );
@@ -131,7 +135,7 @@ test('admin cannot assign operative if it overlaps with another event', function
         ->assertJsonPath('success', true)
         ->assertJsonPath('message', 'Operatives assigned');
 
-    $assignSecondResponse = $this->withToken($adminToken)->postJson(
+    $assignSecondResponse = $this->postJson(
         "/api/v1/orders/{$secondOrderId}/assign-operatives",
         ['operative_ids' => [$operativeId]],
     );
