@@ -4,6 +4,7 @@ import Login from './pages/login';
 import Dashboard from './pages/dashboard';
 import Events from './pages/events';
 import Hotels from './pages/hotels';
+import Items from './pages/items';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -52,6 +53,14 @@ const AppRoutes = () => {
                         <Hotels />
                     </ProtectedRoute>
                 } 
+            />
+            <Route
+                path="/items"
+                element={
+                    <ProtectedRoute allowedRoles={[1, 2]}>
+                        <Items />
+                    </ProtectedRoute>
+                }
             />
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>

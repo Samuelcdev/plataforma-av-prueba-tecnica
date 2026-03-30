@@ -1,7 +1,7 @@
 import React from 'react';
 import SidebarItem from '../molecules/SidebarItem';
 import Button from '../atoms/Button';
-import { Calendar, Users, FileText, Plus, LayoutDashboard, Building2 } from 'lucide-react';
+import { Calendar, Users, Plus, LayoutDashboard, Building2, Boxes } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,24 +17,28 @@ const Sidebar = ({ activePath }) => {
       </div>
 
       <nav className="flex-1 space-y-2">
+        {/* Administrative, hotel */}
         <SidebarItem 
           icon={LayoutDashboard} 
           label="Dashboard" 
           to="/dashboard" 
           active={activePath === '/dashboard'} 
         />
+        {/* Administrative, hotel */}
         <SidebarItem 
           icon={Calendar} 
           label="Eventos" 
           to="/events" 
           active={activePath === '/events'} 
         />
+        {/* Administrative */}
         <SidebarItem 
           icon={Users} 
           label="Personal" 
           to="/personal" 
           active={activePath === '/personal'} 
         />
+        {/* Administrative */}
         {isAdmin && (
           <SidebarItem 
             icon={Building2} 
@@ -43,11 +47,12 @@ const Sidebar = ({ activePath }) => {
             active={activePath === '/hotels'} 
           />
         )}
-        <SidebarItem 
-          icon={FileText} 
-          label="Reportes" 
-          to="/reportes" 
-          active={activePath === '/reportes'} 
+        {/* Administrative */}
+        <SidebarItem
+          icon={Boxes}
+          label="Items"
+          to="/items"
+          active={activePath === '/items'}
         />
       </nav>
 

@@ -59,7 +59,7 @@ const HotelsTable = ({ hotels = [], loading = false, onRowClick, onCreateClick }
                 filteredHotels.map((hotel) => (
                   <tr
                     key={hotel.id}
-                    className="cursor-pointer"
+                    className="cursor-pointer hover:bg-black/10 duration-100"
                     onClick={() => onRowClick?.(hotel)}
                   >
                     <td>{hotel.user?.username || hotel.username || '-'}</td>
