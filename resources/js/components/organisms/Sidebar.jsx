@@ -1,12 +1,12 @@
 import React from 'react';
 import SidebarItem from '../molecules/SidebarItem';
 import Button from '../atoms/Button';
-import { Calendar, Users, FileText, Plus, LayoutDashboard } from 'lucide-react';
+import { Calendar, Users, FileText, Plus, LayoutDashboard, Building2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ activePath }) => {
-  const { isHotel } = useAuth();
+  const { isHotel, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -35,6 +35,14 @@ const Sidebar = ({ activePath }) => {
           to="/personal" 
           active={activePath === '/personal'} 
         />
+        {isAdmin && (
+          <SidebarItem 
+            icon={Building2} 
+            label="Hoteles" 
+            to="/hotels" 
+            active={activePath === '/hotels'} 
+          />
+        )}
         <SidebarItem 
           icon={FileText} 
           label="Reportes" 
