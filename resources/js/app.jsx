@@ -5,6 +5,7 @@ import Dashboard from './pages/dashboard';
 import Events from './pages/events';
 import Hotels from './pages/hotels';
 import Items from './pages/items';
+import PersonalPage from './pages/personal';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -59,6 +60,14 @@ const AppRoutes = () => {
                 element={
                     <ProtectedRoute allowedRoles={[1, 2]}>
                         <Items />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/personal"
+                element={
+                    <ProtectedRoute allowedRoles={[1]}>
+                        <PersonalPage />
                     </ProtectedRoute>
                 }
             />

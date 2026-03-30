@@ -32,12 +32,14 @@ const Sidebar = ({ activePath }) => {
           active={activePath === '/events'} 
         />
         {/* Administrative */}
-        <SidebarItem 
-          icon={Users} 
-          label="Personal" 
-          to="/personal" 
-          active={activePath === '/personal'} 
-        />
+        {isAdmin && (
+          <SidebarItem
+            icon={Users}
+            label="Personal"
+            to="/personal"
+            active={activePath === '/personal'}
+          />
+        )}
         {/* Administrative */}
         {isAdmin && (
           <SidebarItem 
