@@ -11,6 +11,9 @@ interface OperativeRepositoryInterface
     /**
      * @return list<OperativeEntity>
      */
-    public function all(): array;
+    public function all(array $filters = []): array;
+
+    public function count(array $filters = []): int;
+
     public function findById(string $id): ?OperativeEntity;
 }

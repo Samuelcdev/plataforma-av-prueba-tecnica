@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Presentation\Http\Controllers\AuthController;
 use App\Presentation\Http\Controllers\HotelController;
 use App\Presentation\Http\Controllers\ItemController;
+use App\Presentation\Http\Controllers\OperativeController;
 use App\Presentation\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,5 +41,9 @@ Route::prefix('/v1')->group(function (): void {
 
     Route::middleware('auth')->prefix('items')->group(function (): void {
         Route::get('/', [ItemController::class, 'get'])->name('api.v1.items.get');
+    });
+
+    Route::middleware('auth')->prefix('operatives')->group(function (): void {
+        Route::get('/', [OperativeController::class, 'get'])->name('api.v1.operatives.get');
     });
 });
