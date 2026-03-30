@@ -42,6 +42,12 @@ Esto permite:
 - Reducir duplicación
 - Facilitar cambios sin romper la UI
 
+## Imagenes del proyecto
+![Login](/home/developer/Imágenes/Login.png)
+![Dashboard](/home/developer/Imágenes/Dashboard.png)
+![Eventos](/home/developer/Imágenes/Eventos.png)
+
+
 ## Docker y compatibilidad entre entornos
 
 Se utilizó Docker porque trabajo en Linux y quería asegurar compatibilidad del software en diferentes entornos de desarrollo y despliegue.  
