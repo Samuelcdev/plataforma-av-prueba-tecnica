@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use DateTimeImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -9,49 +10,42 @@ class OrderAssignmentsSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('order_assignments')->insert([
-            [
-                'id' => 'a0000000-0000-0000-0000-000000000001',
-                'order_id' => '80000000-0000-0000-0000-000000000001',
-                'operative_id' => '50000000-0000-0000-0000-000000000001',
-                'admin_id' => '019d3820-0f3d-731f-8ad0-767b93840a22',
-                'assigned_at' => '2026-03-28 09:00:00',
-            ],
-            [
-                'id' => 'a0000000-0000-0000-0000-000000000002',
-                'order_id' => '80000000-0000-0000-0000-000000000002',
-                'operative_id' => '50000000-0000-0000-0000-000000000002',
-                'admin_id' => '019d3820-0f3d-731f-8ad0-767b93840a22',
-                'assigned_at' => '2026-03-28 09:05:00',
-            ],
-            [
-                'id' => 'a0000000-0000-0000-0000-000000000003',
-                'order_id' => '80000000-0000-0000-0000-000000000003',
-                'operative_id' => '50000000-0000-0000-0000-000000000003',
-                'admin_id' => '019d3820-0f3c-70ae-b8d7-ac282e09cc3b',
-                'assigned_at' => '2026-03-28 09:10:00',
-            ],
-            [
-                'id' => 'a0000000-0000-0000-0000-000000000004',
-                'order_id' => '80000000-0000-0000-0000-000000000004',
-                'operative_id' => '50000000-0000-0000-0000-000000000001',
-                'admin_id' => '019d3820-0f3c-70ae-b8d7-ac282e09cc3b',
-                'assigned_at' => '2026-03-28 09:15:00',
-            ],
-            [
-                'id' => 'a0000000-0000-0000-0000-000000000005',
-                'order_id' => '80000000-0000-0000-0000-000000000005',
-                'operative_id' => '50000000-0000-0000-0000-000000000002',
-                'admin_id' => '019d3820-0f3d-731f-8ad0-767b93840a22',
-                'assigned_at' => '2026-03-28 09:20:00',
-            ],
-            [
-                'id' => 'a0000000-0000-0000-0000-000000000006',
-                'order_id' => '80000000-0000-0000-0000-000000000006',
-                'operative_id' => '50000000-0000-0000-0000-000000000003',
-                'admin_id' => '019d3820-0f3c-70ae-b8d7-ac282e09cc3b',
-                'assigned_at' => '2026-03-28 09:25:00',
-            ],
-        ]);
+        $adminIds = [
+            '019d3820-0f3d-731f-8ad0-767b93840a22',
+            '019d3820-0f3c-70ae-b8d7-ac282e09cc3b',
+        ];
+
+        $baseAssignedAt = new DateTimeImmutable('2026-03-28 08:00:00');
+        $rows = [];
+        $rowId = 1;
+
+        for ($order = 1; $order <= 240; $order++) {
+            $operativeOne = (($order - 1) % 35) + 1;
+            $operativeTwo = (($order + 10) % 35) + 1;
+            if ($operativeTwo === $operativeOne) {
+                $operativeTwo = (($operativeTwo + 1) % 35) + 1;
+            }
+
+            $firstAssignedAt = $baseAssignedAt->modify(sprintf('+%d minutes', $order * 3));
+            $secondAssignedAt = $firstAssignedAt->modify('+6 minutes');
+
+            $rows[] = [
+                'id' => sprintf('a0000000-0000-0000-0000-%012d', $rowId++),
+                'order_id' => sprintf('80000000-0000-0000-0000-%012d', $order),
+                'operative_id' => sprintf('50000000-0000-0000-0000-%012d', $operativeOne),
+                'admin_id' => $adminIds[$order % 2],
+                'assigned_at' => $firstAssignedAt->format('Y-m-d H:i:s'),
+            ];
+
+            $rows[] = [
+                'id' => sprintf('a0000000-0000-0000-0000-%012d', $rowId++),
+                'order_id' => sprintf('80000000-0000-0000-0000-%012d', $order),
+                'operative_id' => sprintf('50000000-0000-0000-0000-%012d', $operativeTwo),
+                'admin_id' => $adminIds[($order + 1) % 2],
+                'assigned_at' => $secondAssignedAt->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        DB::table('order_assignments')->insert($rows);
     }
 }

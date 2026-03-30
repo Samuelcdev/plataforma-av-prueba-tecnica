@@ -9,35 +9,31 @@ class OperativesSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('operatives')->insert([
-            [
-                'id' => '50000000-0000-0000-0000-000000000001',
-                'document_type' => 'CC',
-                'document' => '7007007001',
-                'name' => 'Operativo Norte',
-                'is_active' => true,
-            ],
-            [
-                'id' => '50000000-0000-0000-0000-000000000002',
-                'document_type' => 'CC',
-                'document' => '7007007002',
-                'name' => 'Operativo Sur',
-                'is_active' => true,
-            ],
-            [
-                'id' => '50000000-0000-0000-0000-000000000003',
-                'document_type' => 'TI',
-                'document' => '7007007003',
-                'name' => 'Operativo Centro',
-                'is_active' => true,
-            ],
-            [
-                'id' => '50000000-0000-0000-0000-000000000004',
-                'document_type' => 'CE',
-                'document' => '7007007004',
-                'name' => 'Operativo Occidente',
-                'is_active' => false,
-            ],
-        ]);
+        $names = [
+            'Daniel Moreno', 'Paula Cardenas', 'Santiago Ruiz', 'Laura Quintero', 'Miguel Forero',
+            'Camila Parra', 'Jhonatan Salazar', 'Valentina Rojas', 'Andres Mejia', 'Nicolas Cifuentes',
+            'Juliana Castro', 'Sebastian Rios', 'Catalina Naranjo', 'Felipe Acevedo', 'Tatiana Galindo',
+            'Diego Pineda', 'Luisa Bernal', 'Kevin Mendoza', 'Manuela Ospina', 'Esteban Cardona',
+            'Natalia Herrera', 'Javier Lopez', 'Diana Aguirre', 'Juan Camilo Torres', 'Erika Duarte',
+            'Alejandro Salas', 'Martha Pardo', 'Cristian Suarez', 'Sofia Arboleda', 'David Lemus',
+            'Maria Camila Arias', 'Yeferson Marin', 'Angie Lozano', 'Brayan Cuellar', 'Lorena Castano',
+        ];
+
+        $documentTypes = ['CC', 'CC', 'CC', 'CE', 'TI'];
+        $rows = [];
+
+        foreach ($names as $index => $name) {
+            $i = $index + 1;
+
+            $rows[] = [
+                'id' => sprintf('50000000-0000-0000-0000-%012d', $i),
+                'document_type' => $documentTypes[$index % count($documentTypes)],
+                'document' => sprintf('7007%06d', $i),
+                'name' => $name,
+                'is_active' => $i % 9 !== 0,
+            ];
+        }
+
+        DB::table('operatives')->insert($rows);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use DateTimeImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -9,67 +10,66 @@ class OrdersSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('orders')->insert([
-            [
-                'id' => '80000000-0000-0000-0000-000000000001',
-                'hotel_id' => '019d3820-3fcd-721e-97b9-152da9a7d53c',
-                'name' => 'Orden Semanal Andes 01',
-                'service_type' => 'Limpieza',
-                'start_date' => '2026-04-01 08:00:00',
-                'end_date' => '2026-04-01 18:00:00',
-                'created_at' => '2026-03-28 00:00:00',
-                'updated_at' => '2026-03-28 00:00:00',
-            ],
-            [
-                'id' => '80000000-0000-0000-0000-000000000002',
-                'hotel_id' => '019d3820-3fcd-721e-97b9-152da9a7d53c',
-                'name' => 'Orden Semanal Andes 02',
-                'service_type' => 'Mantenimiento',
-                'start_date' => '2026-04-03 09:00:00',
-                'end_date' => '2026-04-03 16:30:00',
-                'created_at' => '2026-03-28 00:00:00',
-                'updated_at' => '2026-03-28 00:00:00',
-            ],
-            [
-                'id' => '80000000-0000-0000-0000-000000000003',
-                'hotel_id' => '019d3820-3fcd-721e-97b9-1bb0fbf54534',
-                'name' => 'Orden Pacifico 01',
-                'service_type' => 'Lavanderia',
-                'start_date' => '2026-04-02 07:30:00',
-                'end_date' => '2026-04-02 14:00:00',
-                'created_at' => '2026-03-28 00:00:00',
-                'updated_at' => '2026-03-28 00:00:00',
-            ],
-            [
-                'id' => '80000000-0000-0000-0000-000000000004',
-                'hotel_id' => '019d3820-3fcd-721e-97b9-1bb0fbf54534',
-                'name' => 'Orden Pacifico 02',
-                'service_type' => 'Desinfeccion',
-                'start_date' => '2026-04-05 10:00:00',
-                'end_date' => '2026-04-05 20:00:00',
-                'created_at' => '2026-03-28 00:00:00',
-                'updated_at' => '2026-03-28 00:00:00',
-            ],
-            [
-                'id' => '80000000-0000-0000-0000-000000000005',
-                'hotel_id' => '019d3820-3fcd-721e-97b9-1e1995e6afbd',
-                'name' => 'Orden Oriente 01',
-                'service_type' => 'Aseo General',
-                'start_date' => '2026-04-04 06:00:00',
-                'end_date' => '2026-04-04 13:00:00',
-                'created_at' => '2026-03-28 00:00:00',
-                'updated_at' => '2026-03-28 00:00:00',
-            ],
-            [
-                'id' => '80000000-0000-0000-0000-000000000006',
-                'hotel_id' => '019d3820-3fcd-721e-97b9-1e1995e6afbd',
-                'name' => 'Orden Oriente 02',
-                'service_type' => 'Limpieza',
-                'start_date' => '2026-04-06 08:15:00',
-                'end_date' => '2026-04-06 17:00:00',
-                'created_at' => '2026-03-28 00:00:00',
-                'updated_at' => '2026-03-28 00:00:00',
-            ],
-        ]);
+        $hotelIds = [
+            '019d3820-3fcd-721e-97b9-152da9a7d53c',
+            '019d3820-3fcd-721e-97b9-1bb0fbf54534',
+            '019d3820-3fcd-721e-97b9-1e1995e6afbd',
+        ];
+
+        $hotelAlias = [
+            'Andes',
+            'Pacifico',
+            'Oriente',
+        ];
+
+        $serviceTypes = [
+            'Congreso corporativo',
+            'Lanzamiento de producto',
+            'Convencion comercial',
+            'Seminario academico',
+            'Rueda de prensa',
+            'Coctel empresarial',
+            'Asamblea anual',
+            'Capacitacion interna',
+        ];
+
+        $baseDate = new DateTimeImmutable('2026-03-30 07:00:00');
+        $rows = [];
+
+        for ($i = 1; $i <= 240; $i++) {
+            $hotelIndex = ($i - 1) % count($hotelIds);
+            $dayOffset = ($i % 180) - 90;
+            $start = $baseDate
+                ->modify(sprintf('%+d days', $dayOffset))
+                ->modify(sprintf('+%d hours', $i % 10));
+
+            $durationHours = 4 + ($i % 8);
+            $end = $start->modify(sprintf('+%d hours', $durationHours));
+
+            $status = 'active';
+            if ($i % 10 === 0 || $i % 10 === 9) {
+                $status = 'pending';
+            }
+            if ($i % 20 === 0) {
+                $status = 'cancelled';
+            }
+
+            $createdAt = $start->modify(sprintf('-%d days', 5 + ($i % 14)));
+            $updatedAt = $createdAt->modify(sprintf('+%d hours', 1 + ($i % 6)));
+
+            $rows[] = [
+                'id' => sprintf('80000000-0000-0000-0000-%012d', $i),
+                'hotel_id' => $hotelIds[$hotelIndex],
+                'name' => sprintf('%s %s %03d', $serviceTypes[$i % count($serviceTypes)], $hotelAlias[$hotelIndex], $i),
+                'service_type' => $serviceTypes[$i % count($serviceTypes)],
+                'start_date' => $start->format('Y-m-d H:i:s'),
+                'end_date' => $end->format('Y-m-d H:i:s'),
+                'status' => $status,
+                'created_at' => $createdAt->format('Y-m-d H:i:s'),
+                'updated_at' => $updatedAt->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        DB::table('orders')->insert($rows);
     }
 }
