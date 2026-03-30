@@ -43,9 +43,18 @@ Esto permite:
 - Facilitar cambios sin romper la UI
 
 ## Imagenes del proyecto
-![Login](/home/developer/Imágenes/Login.png)
-![Dashboard](/home/developer/Imágenes/Dashboard.png)
-![Eventos](/home/developer/Imágenes/Eventos.png)
+<div style="position: relative; width: 600px; height: 350px;">
+
+  <img src="./docs/Login.png" 
+       style="position: absolute; top: 0; left: 0; width: 100%; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);" />
+
+  <img src="./docs/Dashboard.png" 
+       style="position: absolute; top: 30px; left: 30px; width: 100%; border-radius: 10px; opacity: 0.9;" />
+
+  <img src="./docs/Eventos.png" 
+       style="position: absolute; top: 60px; left: 60px; width: 100%; border-radius: 10px; opacity: 0.8;" />
+
+</div>
 
 
 ## Docker y compatibilidad entre entornos
