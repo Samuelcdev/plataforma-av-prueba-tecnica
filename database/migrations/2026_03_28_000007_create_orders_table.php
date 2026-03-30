@@ -23,6 +23,8 @@ return new class extends Migration
             $table->index('status');
             $table->index(['hotel_id', 'start_date']);
             $table->index(['status', 'start_date']);
+            $table->index('created_at');
+            $table->index(['hotel_id', 'created_at']);
         });
     }
 
