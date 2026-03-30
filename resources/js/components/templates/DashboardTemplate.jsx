@@ -19,7 +19,7 @@ const DashboardTemplate = ({
 
         <div className="flex-1 overflow-auto bg-[#FDFBF7] p-8 scroller">
           <div className="max-w-[1280px] mx-auto w-full space-y-8">
-            <div className="flex justify-between items-end">
+            <div className="flex justify-between items-end w-full">
               {children[0]} {/* Page Header */}
               {headerActions}
             </div>

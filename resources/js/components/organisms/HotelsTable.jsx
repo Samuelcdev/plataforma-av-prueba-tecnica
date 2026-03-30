@@ -57,7 +57,6 @@ const HotelsTable = ({ hotels = [], loading = false, onRowClick, onDeleteClick, 
               <th className="text-left px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Teléfono</th>
               <th className="text-left px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Dirección</th>
               <th className="text-left px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Estado</th>
-              <th className="text-right px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Acciones</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -83,7 +82,7 @@ const HotelsTable = ({ hotels = [], loading = false, onRowClick, onDeleteClick, 
                   onDoubleClick={() => onRowClick(hotel)}
                 >
                   <td className="px-6 py-4">
-                    <div className="text-[13px] font-medium text-gray-900">{hotel.username}</div>
+                    <div className="text-[13px] font-medium text-gray-900">{hotel.user.username}</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-[13px] font-medium text-gray-900">{hotel.nit}</div>
@@ -99,20 +98,6 @@ const HotelsTable = ({ hotels = [], loading = false, onRowClick, onDeleteClick, 
                   </td>
                   <td className="px-6 py-4">
                     {getStatusBadge(hotel)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onRowClick(hotel);
-                        }}
-                        className="p-2 text-gray-600 hover:text-[#F5B505] hover:bg-gray-50 rounded-lg transition-colors"
-                        title="Ver detalles (doble clic en fila)"
-                      >
-                        <Edit2 size={16} />
-                      </button>
-                    </div>
                   </td>
                 </tr>
               ))

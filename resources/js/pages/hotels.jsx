@@ -105,7 +105,7 @@ const Hotels = () => {
 
   return (
     <DashboardTemplate activePath="/hotels">
-      <div className="p-8 space-y-6">
+      <div className="w-full space-y-4">
         {/* Header */}
         <div>
           <Typography variant="h1">Gestión de Hoteles</Typography>
