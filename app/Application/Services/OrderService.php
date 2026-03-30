@@ -278,6 +278,8 @@ final class OrderService
         $orderEnd = $order->getEndDate();
 
         foreach ($operativeIds as $operativeId) {
+            $operative = $this->operatives->findById($operativeId);
+            $operativeName = $operative?->getName() ?? $operativeId;
             $assignments = $this->orderAssignments->findAssignmentsWithOrderWindow($operativeId);
 
             foreach ($assignments as $assignment) {
@@ -290,8 +292,8 @@ final class OrderService
 
                 if ($this->rangesOverlap($orderStart, $orderEnd, $start, $end)) {
                     throw new DomainException(
-                        sprintf('El operativo [%s] ya esta asignado para otro evento en esa misma fecha.', $operativeId),
-                        ['operative_id' => $operativeId, 'conflict_order_id' => $assignment['order_id']],
+                        sprintf('El operativo [%s] ya esta asignado para otro evento en esa misma fecha.', $operativeName),
+                        ['operative_name' => $operativeName, 'conflict_order_id' => $assignment['order_id']],
                         'operative.occupied'
                     );
                 }
