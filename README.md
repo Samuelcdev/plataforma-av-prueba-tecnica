@@ -26,10 +26,10 @@ Luego definí la arquitectura técnica y, con esa base, empecé la codificación
 Se utilizó una arquitectura por capas para separar responsabilidades y facilitar el mantenimiento.  
 Algunas decisiones relevantes:
 
-Validaciones centralizadas para evitar inconsistencias
-Control de acceso por roles para proteger operaciones críticas
-Logging y trazabilidad para facilitar debugging y monitoreo
-Optimización en base de datos enfocada en consultas frecuentes (asignaciones y disponibilidad)
+- Validaciones centralizadas para evitar inconsistencias
+- Control de acceso por roles para proteger operaciones críticas
+- Logging y trazabilidad para facilitar debugging y monitoreo
+- Optimización en base de datos enfocada en consultas frecuentes (asignaciones y disponibilidad)
 
 Esto nos permite que el sistema pueda crecer facilmente.
 
@@ -38,9 +38,9 @@ Esto nos permite que el sistema pueda crecer facilmente.
 Del lado del frontend se usó Atomic Design para construir componentes reutilizables. 
 
 Esto permite:
-Mantener consistencia visual
-Reducir duplicación
-Facilitar cambios sin romper la UI
+- Mantener consistencia visual
+- Reducir duplicación
+- Facilitar cambios sin romper la UI
 
 ## Docker y compatibilidad entre entornos
 
