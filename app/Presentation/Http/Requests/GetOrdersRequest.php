@@ -24,6 +24,9 @@ final class GetOrdersRequest extends FormRequest
             'search' => ['nullable', 'string', 'max:150'],
             'page' => ['nullable', 'integer', 'min:1'],
             'total' => ['nullable', 'integer', 'min:1', 'max:100'],
+            'sort' => ['nullable', 'string', 'in:start_date,created_at'],
+            'order' => ['nullable', 'string', 'in:asc,desc'],
+            'start_from' => ['nullable', 'date'],
         ];
     }
 

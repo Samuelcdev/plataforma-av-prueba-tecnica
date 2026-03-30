@@ -1,137 +1,270 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import DashboardTemplate from '../components/templates/DashboardTemplate';
 import Typography from '../components/atoms/Typography';
-import FilterPills from '../components/molecules/FilterPills';
-import StatsGrid from '../components/organisms/StatsGrid';
-import EventsTable from '../components/organisms/EventsTable';
-import { Sparkles } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+
+const UPCOMING_LIMIT = 3;
+const KPI_PAGE_SIZE = 100;
+
+const formatDateTime = (value) => {
+  if (!value) return '-';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '-';
+  return date.toLocaleString('es-CO', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+const WelcomeCard = ({ user, isAdmin }) => {
+  const label = isAdmin ? 'Panel Administrativo' : 'Panel del Hotel';
+  const subtitle = isAdmin
+    ? 'Monitorea los próximos eventos y la capacidad operativa asignada.'
+    : 'Revisa tus próximos eventos y mantén el flujo operativo al día.';
+
+  return (
+    <div className="card bg-base-100 border border-base-300 shadow-sm">
+      <div className="card-body">
+        <p className="text-xs uppercase tracking-wide text-base-content/60">{label}</p>
+        <h2 className="card-title text-2xl">
+          Bienvenido, {user?.username || 'usuario'}
+        </h2>
+        <p className="text-base-content/70">{subtitle}</p>
+      </div>
+    </div>
+  );
+};
+
+const KpiCard = ({ title, value, tone = 'primary' }) => {
+  const toneClass = tone === 'error' ? 'text-error' : tone === 'success' ? 'text-success' : 'text-primary';
+
+  return (
+    <div className="card bg-base-100 border border-base-300 shadow-sm">
+      <div className="card-body p-5">
+        <p className="text-sm text-base-content/70">{title}</p>
+        <p className={`text-3xl font-semibold ${toneClass}`}>{value}</p>
+      </div>
+    </div>
+  );
+};
+
+const UpcomingCards = ({ events, loading, isAdmin }) => {
+  if (loading) {
+    return (
+      <div className="card bg-base-100 border border-base-300 shadow-sm">
+        <div className="card-body py-10 text-center">
+          <span className="loading loading-spinner loading-md" />
+        </div>
+      </div>
+    );
+  }
+
+  if (events.length === 0) {
+    return (
+      <div className="card bg-base-100 border border-base-300 shadow-sm">
+        <div className="card-body">
+          <h3 className="card-title text-lg">Próximos eventos</h3>
+          <p className="text-base-content/70">No tienes eventos próximos por ahora.</p>
+          <div className="card-actions justify-end">
+            <Link className="btn btn-primary btn-sm" to="/events">
+              Ir a eventos
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      {events.map((event) => (
+        <div key={event.id} className="card bg-base-100 border border-base-300 shadow-sm">
+          <div className="card-body">
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="card-title text-lg">{event.name || 'Evento sin nombre'}</h3>
+              <span className="badge badge-outline">{event.status || '-'}</span>
+            </div>
+            <p className="text-sm text-base-content/70">{event.service_type || '-'}</p>
+            <div className="space-y-1 text-sm">
+              <p>
+                <span className="text-base-content/60">Inicio:</span> {formatDateTime(event.start_date)}
+              </p>
+              <p>
+                <span className="text-base-content/60">Fin:</span> {formatDateTime(event.end_date)}
+              </p>
+              {isAdmin ? (
+                <p>
+                  <span className="text-base-content/60">Operativos:</span> {event.assignments?.length || 0}
+                </p>
+              ) : null}
+            </div>
+            <div className="card-actions justify-end">
+              <Link className="btn btn-ghost btn-sm" to="/events">
+                Ver evento
+              </Link>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const DashboardPage = () => {
   const { token, user, logout, isAuthenticated, isAdmin, isHotel } = useAuth();
-  const [orders, setOrders] = useState([]);
-  const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
-  const [search, setSearch] = useState('');
+  const [error, setError] = useState(null);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [kpis, setKpis] = useState({
+    totalEvents: 0,
+    pendingEvents: 0,
+    upcomingEvents: 0,
+    assignedOperatives: 0,
+  });
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchData();
+  const config = useMemo(() => ({
+    headers: { Authorization: `Bearer ${token}` },
+  }), [token]);
+
+  const fetchAdminKpis = async () => {
+    const firstResponse = await axios.get('/api/v1/orders', {
+      ...config,
+      params: {
+        page: 1,
+        total: KPI_PAGE_SIZE,
+        sort: 'created_at',
+        order: 'desc',
+      },
+    });
+
+    const totalEvents = Number(firstResponse.data.total || 0);
+    const totalPages = Math.max(1, Math.ceil(totalEvents / KPI_PAGE_SIZE));
+    let pendingEvents = Array.isArray(firstResponse.data.data)
+      ? firstResponse.data.data.filter((order) => order.status === 'pending').length
+      : 0;
+
+    if (totalPages > 1) {
+      for (let currentPage = 2; currentPage <= totalPages; currentPage += 1) {
+        const response = await axios.get('/api/v1/orders', {
+          ...config,
+          params: {
+            page: currentPage,
+            total: KPI_PAGE_SIZE,
+            sort: 'created_at',
+            order: 'desc',
+          },
+        });
+
+        const orders = Array.isArray(response.data.data) ? response.data.data : [];
+        pendingEvents += orders.filter((order) => order.status === 'pending').length;
+      }
     }
-  }, [isAuthenticated]);
 
-  const fetchData = async () => {
+    return { totalEvents, pendingEvents };
+  };
+
+  const fetchDashboardData = async () => {
     setLoading(true);
-    try {
-      const config = {
-        headers: { Authorization: `Bearer ${token}` }
-      };
-      
-      const [ordersRes, hotelsRes] = await Promise.all([
-        axios.get('/api/v1/orders', config),
-        isAdmin ? axios.get('/api/v1/hotels', config) : Promise.resolve({ data: { data: [] } })
-      ]);
+    setError(null);
 
-      setOrders(ordersRes.data.data);
-      setHotels(hotelsRes.data.data);
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-      if (error.response?.status === 401) {
+    try {
+      const now = new Date().toISOString();
+      const upcomingResponse = await axios.get('/api/v1/orders', {
+        ...config,
+        params: {
+          page: 1,
+          total: UPCOMING_LIMIT,
+          sort: 'start_date',
+          order: 'asc',
+          start_from: now,
+        },
+      });
+
+      const upcoming = Array.isArray(upcomingResponse.data.data) ? upcomingResponse.data.data : [];
+      setUpcomingEvents(upcoming);
+
+      const assignedOperatives = upcoming.reduce(
+        (sum, event) => sum + (Array.isArray(event.assignments) ? event.assignments.length : 0),
+        0
+      );
+
+      if (isAdmin) {
+        const adminKpis = await fetchAdminKpis();
+        setKpis({
+          totalEvents: adminKpis.totalEvents,
+          pendingEvents: adminKpis.pendingEvents,
+          upcomingEvents: upcoming.length,
+          assignedOperatives,
+        });
+      } else {
+        setKpis({
+          totalEvents: 0,
+          pendingEvents: 0,
+          upcomingEvents: upcoming.length,
+          assignedOperatives: 0,
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+      if (err.response?.status === 401) {
         logout();
       }
+      setError(err.response?.data?.message || 'No fue posible cargar el dashboard');
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredOrders = useMemo(() => {
-    return orders.filter(order => {
-      const matchesFilter = filter === 'all' || order.status === filter;
-      const matchesSearch = order.name.toLowerCase().includes(search.toLowerCase()) || 
-                            order.service_type.toLowerCase().includes(search.toLowerCase());
-      return matchesFilter && matchesSearch;
-    });
-  }, [orders, filter, search]);
-
-  const stats = useMemo(() => {
-    return {
-      total: orders.length,
-      confirmed: orders.filter(o => o.status === 'active').length,
-      pending: orders.filter(o => o.status === 'pending').length,
-    };
-  }, [orders]);
+  useEffect(() => {
+    if (!isAuthenticated || !token) return;
+    fetchDashboardData();
+  }, [isAuthenticated, token, isAdmin, isHotel]);
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
 
-  const filterOptions = [
-    { label: 'Todos', value: 'all' },
-    { label: 'Confirmado', value: 'active' },
-    { label: 'Pendiente', value: 'pending' },
-    { label: 'Live', value: 'live' },
-  ];
-
   return (
-    <DashboardTemplate 
-      user={user} 
-      onLogout={logout} 
-      onSearch={setSearch}
+    <DashboardTemplate
+      user={user}
+      onLogout={logout}
+      onSearch={() => {}}
       activePath="/dashboard"
-      headerActions={
-        <FilterPills 
-          options={filterOptions} 
-          activeOption={filter} 
-          onSelect={setFilter} 
-        />
-      }
     >
-      {/* Page Header Slot */}
       <div>
-        <Typography variant="h1">Gestión de Eventos</Typography>
+        <Typography variant="h1">Dashboard</Typography>
         <Typography variant="body" className="mt-1">
-          {isAdmin ? 'Supervisa y coordina la agenda de producción audiovisual global.' : `Gestiona los eventos de ${user?.username}.`}
+          {isAdmin
+            ? 'Resumen ejecutivo de operación y próximos eventos.'
+            : 'Resumen de bienvenida y agenda de tus próximos eventos.'}
         </Typography>
       </div>
 
-      <StatsGrid stats={stats} />
+      {error ? (
+        <div className="alert alert-error">
+          <span>{error}</span>
+        </div>
+      ) : null}
 
-      <EventsTable orders={filteredOrders} hotels={hotels} />
+      <WelcomeCard user={user} isAdmin={isAdmin} />
 
-      {/* Bottom Banner Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 pb-8">
-          <div className="relative rounded-[24px] overflow-hidden group min-h-[220px]">
-              <img src="/stadium.png" alt="Innovation Summit 2024" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-linear-to-t from-[#0A1116]/90 via-[#0D161C]/50 to-transparent"></div>
-              
-              <div className="absolute inset-x-0 bottom-0 p-8 flex flex-col items-start justify-end h-full">
-                  <span className="bg-[#B47C1C]/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-sm mb-3">
-                      Próximo Gran Evento
-                  </span>
-                  <h3 className="text-[28px] font-bold text-white mb-2 leading-tight">Innovation Summit 2024</h3>
-                  <p className="text-white/80 text-[14px]">Capacidad: 2,500 personas | 12 Canales AV Activos</p>
-              </div>
-          </div>
+      {isAdmin ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <KpiCard title="Total eventos" value={kpis.totalEvents} />
+          <KpiCard title="Eventos pendientes" value={kpis.pendingEvents} />
+          <KpiCard title="Próximos eventos" value={kpis.upcomingEvents} />
+          <KpiCard title="Operativos asignados (top 3)" value={kpis.assignedOperatives} />
+        </div>
+      ) : null}
 
-          <div className="bg-[#EBE9E2] rounded-[24px] p-8 relative overflow-hidden flex flex-col shadow-inner">
-              <div className="text-[#875D0D] mb-5 relative z-10">
-                  <Sparkles size={32} />
-              </div>
-              <h3 className="text-[20px] font-bold text-gray-900 mb-3 relative z-10 leading-snug">
-                  Optimización con AI en curso...
-              </h3>
-              <p className="text-gray-600 text-[14px] leading-relaxed mb-6 font-medium relative z-10 flex-1">
-                  Estamos recalculando la distribución de ancho de banda para los streaming del fin de semana.
-              </p>
-              <div className="mt-auto relative z-10">
-                  <a href="#" className="font-bold text-[#8C610F] hover:text-[#5E410A] text-[14px] flex items-center gap-1.5 transition-colors group">
-                      Ver Detalles <span className="group-hover:translate-x-1 transition-transform">→</span>
-                  </a>
-              </div>
-          </div>
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold text-base-content">Próximos eventos</h3>
+        <UpcomingCards events={upcomingEvents} loading={loading} isAdmin={isAdmin} />
       </div>
     </DashboardTemplate>
   );

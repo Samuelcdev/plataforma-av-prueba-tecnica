@@ -30,10 +30,16 @@ final class OrderController extends Controller
     public function index(GetOrdersRequest $request): JsonResponse
     {
         $payload = $request->validated();
+        $startFrom = isset($payload['start_from'])
+            ? (new DateTimeImmutable((string) $payload['start_from']))->format('Y-m-d H:i:s')
+            : null;
         $dto = new GetOrdersDto(
             search: isset($payload['search']) ? trim((string) $payload['search']) : null,
             page: isset($payload['page']) ? (int) $payload['page'] : 1,
             total: isset($payload['total']) ? (int) $payload['total'] : 10,
+            sort: isset($payload['sort']) ? (string) $payload['sort'] : 'start_date',
+            order: isset($payload['order']) ? (string) $payload['order'] : 'asc',
+            startFrom: $startFrom,
         );
         $result = $this->orderService->index($dto);
 

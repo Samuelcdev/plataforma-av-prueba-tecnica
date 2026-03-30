@@ -19,7 +19,7 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
     public function all(array $filters = []): array
     {
         $query = Order::query();
-        $this->applyFilters($query, $filters);
+        [$sort, $order] = $this->applyFilters($query, $filters);
 
         $total = (int) ($filters['total'] ?? 10);
         $page = (int) ($filters['page'] ?? 1);
@@ -28,7 +28,7 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
 
         return $this->mapper->toCollectionEntity(
             $query
-                ->orderBy('start_date')
+                ->orderBy($sort, $order)
                 ->offset(($page - 1) * $total)
                 ->limit($total)
                 ->get()
@@ -38,7 +38,7 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
     public function findByHotelId(string $hotelId, array $filters = []): array
     {
         $query = Order::query()->where('hotel_id', $hotelId);
-        $this->applyFilters($query, $filters);
+        [$sort, $order] = $this->applyFilters($query, $filters);
 
         $total = (int) ($filters['total'] ?? 10);
         $page = (int) ($filters['page'] ?? 1);
@@ -47,7 +47,7 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
 
         return $this->mapper->toCollectionEntity(
             $query
-                ->orderBy('start_date')
+                ->orderBy($sort, $order)
                 ->offset(($page - 1) * $total)
                 ->limit($total)
                 ->get()
@@ -109,18 +109,37 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
         return $order ? (bool) $order->delete() : false;
     }
 
-    private function applyFilters(\Illuminate\Database\Eloquent\Builder $query, array $filters): void
+    /**
+     * @return array{0:string,1:string}
+     */
+    private function applyFilters(\Illuminate\Database\Eloquent\Builder $query, array $filters): array
     {
-        $search = trim((string) ($filters['search'] ?? ''));
-        if ($search === '') {
-            return;
+        $allowedSorts = ['start_date', 'created_at'];
+        $sort = (string) ($filters['sort'] ?? 'start_date');
+        if (! in_array($sort, $allowedSorts, true)) {
+            $sort = 'start_date';
         }
 
-        $query->where(function ($builder) use ($search): void {
-            $builder
-                ->where('name', 'like', '%' . $search . '%')
-                ->orWhere('service_type', 'like', '%' . $search . '%');
-        });
+        $order = strtolower((string) ($filters['order'] ?? 'asc'));
+        if (! in_array($order, ['asc', 'desc'], true)) {
+            $order = 'asc';
+        }
+
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search !== '') {
+            $query->where(function ($builder) use ($search): void {
+                $builder
+                    ->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('service_type', 'like', '%' . $search . '%');
+            });
+        }
+
+        $startFrom = $filters['start_from'] ?? null;
+        if (is_string($startFrom) && trim($startFrom) !== '') {
+            $query->where('start_date', '>=', $startFrom);
+        }
+
+        return [$sort, $order];
     }
 
     private function toDatabaseDateTime(?DateTimeImmutable $value): ?string

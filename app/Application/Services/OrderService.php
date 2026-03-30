@@ -63,6 +63,9 @@ final class OrderService
             'search' => $dto->getSearch(),
             'page' => $dto->getPage(),
             'total' => $dto->getTotal(),
+            'sort' => $dto->getSort(),
+            'order' => $dto->getOrder(),
+            'start_from' => $dto->getStartFrom(),
         ];
 
         if ($user->getRoleId() === self::ADMIN_ROLE_ID) {
