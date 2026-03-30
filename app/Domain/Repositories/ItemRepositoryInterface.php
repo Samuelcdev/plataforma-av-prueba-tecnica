@@ -11,7 +11,9 @@ interface ItemRepositoryInterface
     /**
      * @return list<ItemEntity>
      */
-    public function all(): array;
+    public function all(array $filters = []): array;
+
+    public function count(array $filters = []): int;
 
     public function findById(string $id): ?ItemEntity;
 

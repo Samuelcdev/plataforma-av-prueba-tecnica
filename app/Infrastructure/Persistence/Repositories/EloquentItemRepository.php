@@ -16,11 +16,31 @@ final class EloquentItemRepository implements ItemRepositoryInterface
     {
     }
 
-    public function all(): array
+    public function all(array $filters = []): array
     {
+        $query = Item::query();
+        $this->applyFilters($query, $filters);
+
+        $total = (int) ($filters['total'] ?? 10);
+        $page = (int) ($filters['page'] ?? 1);
+        $total = max(1, min($total, 100));
+        $page = max(1, $page);
+
         return $this->mapper->toCollectionEntity(
-            Item::query()->orderBy('name')->get()
+            $query
+                ->orderBy('name')
+                ->offset(($page - 1) * $total)
+                ->limit($total)
+                ->get()
         );
+    }
+
+    public function count(array $filters = []): int
+    {
+        $query = Item::query();
+        $this->applyFilters($query, $filters);
+
+        return (int) $query->count();
     }
 
     public function findById(string $id): ?ItemEntity
@@ -55,6 +75,23 @@ final class EloquentItemRepository implements ItemRepositoryInterface
 
         return $item ? (bool) $item->delete() : false;
     }
+
+    private function applyFilters(\Illuminate\Database\Eloquent\Builder $query, array $filters): void
+    {
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search !== '') {
+            $query->where(function ($builder) use ($search): void {
+                $builder
+                    ->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+
+        if (array_key_exists('is_active', $filters) && $filters['is_active'] !== null) {
+            $query->where('is_active', (bool) $filters['is_active']);
+        }
+    }
+
     private function toDatabaseDateTime(?DateTimeImmutable $value): ?string
     {
         return $value?->format('Y-m-d H:i:s');

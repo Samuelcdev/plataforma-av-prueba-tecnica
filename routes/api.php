@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Presentation\Http\Controllers\AuthController;
 use App\Presentation\Http\Controllers\HotelController;
+use App\Presentation\Http\Controllers\ItemController;
 use App\Presentation\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,5 +36,9 @@ Route::prefix('/v1')->group(function (): void {
         Route::patch('{id}', [OrderController::class, 'update'])->name('api.v1.orders.patch');
         Route::post('{id}/assign-operatives', [OrderController::class, 'assignOperatives'])->name('api.v1.orders.assign-operatives');
         Route::post('{id}/cancel', [OrderController::class, 'cancel'])->name('api.v1.orders.cancel');
+    });
+
+    Route::middleware('auth')->prefix('items')->group(function (): void {
+        Route::get('/', [ItemController::class, 'get'])->name('api.v1.items.get');
     });
 });
