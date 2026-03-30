@@ -28,6 +28,8 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->foreign('role_id')->references('id')->on('roles');
+            $table->index(['role_id', 'is_active']);
+            $table->index('deleted_at');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->integer('quantity')->default(1);
 
             $table->unique(['order_id', 'item_id']);
+            $table->index(['order_id', 'id']);
         });
     }
 

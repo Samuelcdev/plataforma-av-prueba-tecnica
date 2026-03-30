@@ -14,6 +14,8 @@ return new class extends Migration
             $table->string('document', 30)->unique();
             $table->string('name', 150);
             $table->boolean('is_active')->default(true);
+
+            $table->index(['is_active', 'name']);
         });
     }
 

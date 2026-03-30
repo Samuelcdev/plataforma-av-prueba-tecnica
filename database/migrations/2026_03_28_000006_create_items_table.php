@@ -15,6 +15,8 @@ return new class extends Migration
             $table->decimal('price', 12, 2);
             $table->boolean('is_active')->default(true);
             $table->timestamp('created_at')->useCurrent();
+
+            $table->index(['is_active', 'name']);
         });
     }
 

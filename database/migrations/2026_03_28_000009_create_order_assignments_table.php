@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unique(['order_id', 'operative_id']);
             $table->index('operative_id');
             $table->index('order_id');
+            $table->index(['order_id', 'assigned_at']);
         });
     }
 

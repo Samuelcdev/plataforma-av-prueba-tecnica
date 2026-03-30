@@ -21,6 +21,8 @@ return new class extends Migration
             $table->index(['start_date', 'end_date']);
             $table->index('hotel_id');
             $table->index('status');
+            $table->index(['hotel_id', 'start_date']);
+            $table->index(['status', 'start_date']);
         });
     }
 
