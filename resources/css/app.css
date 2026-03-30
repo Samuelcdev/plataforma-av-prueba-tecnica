@@ -2,6 +2,40 @@
 @plugin "daisyui" {
     themes: light --default;
 }
+@plugin "daisyui/theme" {
+    name: light;
+    default: true;
+
+    --color-base-100: #fdfbf7;
+    --color-base-200: #f6f5f2;
+    --color-base-300: #eceae4;
+    --color-base-content: #1f2937;
+
+    --color-primary: #f5b505;
+    --color-primary-content: #4a3500;
+    --color-secondary: #ae802d;
+    --color-secondary-content: #fff9f0;
+    --color-accent: #e5a500;
+    --color-accent-content: #4a3500;
+    --color-neutral: #2f2f2f;
+    --color-neutral-content: #fdfbf7;
+
+    --color-info: #3b82f6;
+    --color-info-content: #eff6ff;
+    --color-success: #16a34a;
+    --color-success-content: #f0fdf4;
+    --color-warning: #d97706;
+    --color-warning-content: #fffbeb;
+    --color-error: #dc2626;
+    --color-error-content: #fef2f2;
+
+    --radius-selector: 0.75rem;
+    --radius-field: 0.75rem;
+    --radius-box: 1rem;
+
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+}
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';

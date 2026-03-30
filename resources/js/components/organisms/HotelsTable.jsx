@@ -1,114 +1,85 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Edit2, Trash2 } from 'lucide-react';
-import Badge from '../atoms/Badge';
-import Typography from '../atoms/Typography';
-import Button from '../atoms/Button';
+import React, { useMemo, useState } from 'react';
+import SearchInput from '../molecules/SearchInput';
 
-const HotelsTable = ({ hotels = [], loading = false, onRowClick, onDeleteClick, onCreateClick }) => {
+const HotelsTable = ({ hotels = [], loading = false, onRowClick, onCreateClick }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredHotels = useMemo(() => {
     if (!searchTerm.trim()) return hotels;
     
     const term = searchTerm.toLowerCase();
-    return hotels.filter(hotel => 
-      hotel.name.toLowerCase().includes(term) || 
-      hotel.nit.toLowerCase().includes(term)
+    return hotels.filter((hotel) =>
+      (hotel.name || '').toLowerCase().includes(term) ||
+      (hotel.nit || '').toLowerCase().includes(term)
     );
   }, [hotels, searchTerm]);
 
-  const getStatusBadge = (hotel) => {
-    return <Badge variant="success">Activo</Badge>;
-  };
-
   return (
-    <div className="bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-gray-50 overflow-hidden">
-      {/* Header con búsqueda y botón crear */}
-      <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-        <div className="flex-1 max-w-md">
-          <div className="relative">
-            <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Buscar por nombre o NIT..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-[13px] focus:outline-none focus:ring-2 focus:ring-[#F5B505] focus:border-transparent"
-            />
-          </div>
+    <div className="card bg-base-100 border border-base-300 shadow-sm">
+      <div className="card-body gap-4 p-4 sm:p-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <SearchInput
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar por nombre o NIT..."
+            className="w-full max-w-xl"
+            inputClassName="input input-bordered bg-base-100 focus:bg-base-100"
+          />
+          <button type="button" className="btn btn-primary" onClick={onCreateClick}>
+            Crear hotel
+          </button>
         </div>
-        <Button 
-          variant="primary" 
-          className="ml-4"
-          onClick={onCreateClick}
-        >
-          + Crear Hotel
-        </Button>
-      </div>
 
-      {/* Tabla */}
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-gray-50/50 border-b border-gray-100">
-              <th className="text-left px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Usuario</th>
-              <th className="text-left px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">NIT</th>
-              <th className="text-left px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Nombre</th>
-              <th className="text-left px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Teléfono</th>
-              <th className="text-left px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Dirección</th>
-              <th className="text-left px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Estado</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {loading ? (
+        <div className="overflow-x-auto rounded-box border border-base-300">
+          <table className="table table-zebra table-sm sm:table-md">
+            <thead>
               <tr>
-                <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
-                  <div className="flex justify-center items-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#F5B505]"></div>
-                  </div>
-                </td>
+                <th>Usuario</th>
+                <th>NIT</th>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Estado</th>
               </tr>
-            ) : filteredHotels.length === 0 ? (
-              <tr>
-                <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
-                  No hay hoteles disponibles
-                </td>
-              </tr>
-            ) : (
-              filteredHotels.map((hotel) => (
-                <tr 
-                  key={hotel.id} 
-                  className="hover:bg-gray-50/50 transition-colors cursor-pointer group"
-                  onDoubleClick={() => onRowClick(hotel)}
-                >
-                  <td className="px-6 py-4">
-                    <div className="text-[13px] font-medium text-gray-900">{hotel.user.username}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-[13px] font-medium text-gray-900">{hotel.nit}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-[13px] font-medium text-gray-900">{hotel.name}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-[13px] text-gray-600">{hotel.phone || '-'}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-[13px] text-gray-600 max-w-xs truncate">{hotel.address || '-'}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    {getStatusBadge(hotel)}
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="6" className="py-8 text-center">
+                    <span className="loading loading-spinner loading-md" />
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              ) : filteredHotels.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="py-8 text-center text-base-content/70">
+                    No hay hoteles disponibles
+                  </td>
+                </tr>
+              ) : (
+                filteredHotels.map((hotel) => (
+                  <tr
+                    key={hotel.id}
+                    className="cursor-pointer"
+                    onClick={() => onRowClick?.(hotel)}
+                  >
+                    <td>{hotel.user?.username || hotel.username || '-'}</td>
+                    <td>{hotel.nit || '-'}</td>
+                    <td>{hotel.name || '-'}</td>
+                    <td>{hotel.phone || '-'}</td>
+                    <td className="max-w-72 truncate">{hotel.address || '-'}</td>
+                    <td>
+                      <span className="badge badge-success badge-outline">Activo</span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
-      {/* Footer con info */}
-      <div className="px-6 py-4 bg-gray-50/50 border-t border-gray-100 text-[12px] text-gray-600">
-        Mostrando {filteredHotels.length} de {hotels.length} hoteles
+        <div className="text-sm text-base-content/70">
+          Mostrando {filteredHotels.length} de {hotels.length} hoteles
+        </div>
       </div>
     </div>
   );
