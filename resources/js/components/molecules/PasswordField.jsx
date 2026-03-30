@@ -10,11 +10,6 @@ export function PasswordField({ label, icon, forgotPasswordUrl, ...props }) {
         <div className="space-y-2.5">
             <div className="flex justify-between items-center pl-1">
                 <Label className="pl-0">{label}</Label>
-                {forgotPasswordUrl && (
-                    <a href={forgotPasswordUrl} className="flex-shrink-0 text-[11px] font-bold text-[#AE802D] hover:text-[#8D6620] hover:underline transition-colors tracking-wide">
-                        ¿Olvidaste tu contraseña?
-                    </a>
-                )}
             </div>
             <div className="relative group">
                 {icon && (

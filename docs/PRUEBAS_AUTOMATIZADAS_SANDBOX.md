@@ -15,7 +15,11 @@ docker compose up -d --build
 ## 2. Crear base de datos de pruebas aislada
 
 ```bash
-docker exec -it plataforma-bd mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS plataforma_test;"
+docker exec -i plataforma-bd mysql -uroot -proot -e "
+  CREATE DATABASE IF NOT EXISTS plataforma_test;
+  GRANT ALL PRIVILEGES ON plataforma_test.* TO 'admin'@'%';
+  FLUSH PRIVILEGES;
+  "
 ```
 
 ## 3. Ejecutar tests completos en sandbox
