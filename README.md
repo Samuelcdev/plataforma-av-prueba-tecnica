@@ -62,26 +62,11 @@ Esto permite:
 Se utilizó Docker porque trabajo en Linux y quería asegurar compatibilidad del software en diferentes entornos de desarrollo y despliegue.  
 Con contenedores, cualquier persona del equipo puede levantar el proyecto con una configuración estándar y menos problemas de dependencias.
 
-## Levantar el proyecto con Docker
+## Instalacion 
 
-```bash
-cp .env.example .env
-docker compose up -d --build
-```
+Para instalar el proyecto sigue los pasos de instalacion de este archivo:
 
-Comandos iniciales sugeridos:
-
-```bash
-docker exec -it laravel-app composer install
-docker exec -it laravel-app php artisan key:generate
-docker exec -it laravel-app php artisan migrate --seed
-```
-
-## Notas de pruebas
-
-Para pruebas y ejecución técnica detallada puedes revisar:
-
-- [docs/INSTALACION_DOCKER.md](docs/INSTALACION_DOCKER.md)
+- [docs/INSTALACION.md](docs/INSTALACION.md)
 
 ## Pruebas automatizadas en sandbox
 
